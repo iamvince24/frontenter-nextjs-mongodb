@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { NavButton } from "@/components/ui/NavButton";
 import Link from "next/link";
@@ -8,8 +8,9 @@ import { DialogDemo } from "@/components/dialog/DialogDemo";
 import SignUpForm from "../auth/SignUpForm";
 import LogInForm from "../auth/LogInForm";
 import { getCurrentUser } from "@/actions/getCurrentUser";
-import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 
 const links: { title: string; href: string; description: string }[] = [
   {
@@ -20,7 +21,7 @@ const links: { title: string; href: string; description: string }[] = [
   },
 ];
 
-const Navbar = () => {
+function Navbar({ currentUsername }: { currentUsername?: string }) {
   const path = usePathname();
   const isAdmin = path.includes("/profile");
 
@@ -43,7 +44,7 @@ const Navbar = () => {
             </Link>
           );
         })}
-        {isAdmin ? (
+        {currentUsername ? (
           <>
             <Link href="/profile">
               <NavButton>會員管理</NavButton>
@@ -65,6 +66,6 @@ const Navbar = () => {
       </div>
     </header>
   );
-};
+}
 
 export default Navbar;

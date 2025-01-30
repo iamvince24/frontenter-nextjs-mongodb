@@ -7,7 +7,6 @@ import { getCurrentUser } from "@/actions/getCurrentUser";
 const Create = async () => {
   const currentUser = await getCurrentUser();
   const authorId = currentUser?.id;
-  // console.log(authorId);
 
   return (
     <div>

@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { z } from "zod";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import { CldUploadWidget, CldUploadWidgetProps } from "next-cloudinary";
+import { Button, ButtonProps } from "../ui/button";
 
 import {
   Select,
@@ -28,6 +31,7 @@ const ArticleFormSchema = z.object({
   totalDays: z.number().min(1, "總天數必須大於0"),
   weeklyHours: z.number().min(1, "每週小時數必須大於0"),
   content: z.string().min(1, "內容是必填項"),
+  imageUrl: z.string().url(),
 });
 
 type ArticleFormInputs = z.infer<typeof ArticleFormSchema>;
@@ -42,11 +46,15 @@ export default function ArticleForm({
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm<ArticleFormInputs>({
     resolver: zodResolver(ArticleFormSchema),
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageWidth, setImageWidth] = useState<number>(0);
+  const [imageHeight, setImageHeight] = useState<number>(0);
 
   const onSubmit = async (data: ArticleFormInputs) => {
     setIsSubmitting(true);
@@ -60,15 +68,14 @@ export default function ArticleForm({
         body: JSON.stringify(data),
       });
 
-      // console.log(data);
-      // console.log(response); // 確認回應
-
       if (!response.ok) {
         throw new Error("Failed to create article");
       }
 
       const article = await response.json();
       // router.push(`/articles/${article.id}`);
+      setImageUrl("");
+      reset();
     } catch (error) {
       console.error(error);
     } finally {
@@ -80,8 +87,50 @@ export default function ArticleForm({
     return <p>Please sign in to create an article.</p>;
   }
 
+  const handleUpload: CldUploadWidgetProps["onSuccess"] = (result: any) => {
+    if (result.event === "success") {
+      setImageUrl(result.info.secure_url);
+      setValue("imageUrl", result.info.secure_url);
+      setImageWidth(result.info.width);
+      setImageHeight(result.info.height);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
+      <div>
+        <label htmlFor="imageUrl">Upload Image:</label>
+        <input
+          id="imageUrl"
+          type="url"
+          {...register("imageUrl")}
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          hidden
+        />
+        <CldUploadWidget
+          uploadPreset="qlq9mpxc"
+          onSuccess={handleUpload}
+          // onFailure={(error) => console.error("Upload failed", error)}
+          options={{ sources: ["local"], maxFiles: 1 }}
+        >
+          {({ open }) => (
+            <Button type="button" onClick={() => open?.()}>
+              Upload Image
+            </Button>
+          )}
+        </CldUploadWidget>
+        {imageUrl && (
+          <div>
+            <Image
+              src={imageUrl}
+              alt="Uploaded Image"
+              width={imageWidth}
+              height={imageHeight}
+            />
+          </div>
+        )}
+      </div>
       <div>
         <label
           htmlFor="title"
@@ -297,7 +346,10 @@ export default function ArticleForm({
       </div>
       <button
         type="submit"
-        className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm"
+        // className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm"
+        className={`mt-4 py-2 px-4 rounded-md shadow-sm ${
+          isSubmitting ? "bg-black text-white" : "bg-indigo-600 text-white"
+        }`}
         disabled={isSubmitting}
       >
         Submit

@@ -16,10 +16,10 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 
-const LogiInSchema = z.object({
+const LogInSchema = z.object({
   email: z
     .string({ required_error: "Email 為必填欄位" })
     .email("請輸入正確的 Email"),
@@ -32,46 +32,47 @@ export default function LogInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const form = useForm<z.infer<typeof LogiInSchema>>({
-    resolver: zodResolver(LogiInSchema),
+  const form = useForm<z.infer<typeof LogInSchema>>({
+    resolver: zodResolver(LogInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof LogiInSchema>) {
+  async function onSubmit(values: z.infer<typeof LogInSchema>) {
     setIsLoading(true);
 
-    signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false,
-      callbackUrl: "/profile",
-    })
-      .then((callback) => {
-        setIsLoading(false);
-        if (callback?.error) {
-          const errorMessage =
-            callback.error === "Invalid credentials"
-              ? "帳號或密碼錯誤"
-              : "登入失敗";
-          console.error(errorMessage);
-        } else {
-          console.log("登入成功");
-          window.location.href = "/profile";
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
+    try {
+      const callback = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+        callbackUrl: "/profile",
       });
+
+      if (callback?.error) {
+        const errorMessage =
+          callback.error === "Invalid credentials"
+            ? "帳號或密碼錯誤"
+            : "登入失敗";
+        console.error(errorMessage);
+        // 可以在 UI 上顯示錯誤訊息
+      } else {
+        console.log("登入成功");
+        router.push("/profile");
+      }
+    } catch (error) {
+      console.error("登入失敗", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <div>
       <CardHeader className="text-center">
         <CardTitle>登入</CardTitle>
-        {/* <CardDescription>新增會員</CardDescription> */}
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -88,7 +89,6 @@ export default function LogInForm() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  {/* <FormDescription>This is your Email.</FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -102,10 +102,7 @@ export default function LogInForm() {
                   <FormControl>
                     <Input type="password" placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    密碼必須至少包含 8 個字符，最多 50
-                    個字符，並包含至少一個大寫字母，一個小寫字母，一個數字和一個特殊字符。
-                  </FormDescription>
+                  <FormDescription>密碼長度不可小於 8 個字元</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

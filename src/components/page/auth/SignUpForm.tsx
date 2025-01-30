@@ -16,7 +16,8 @@ import {
   FormDescription,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
 const signUpSchema = z.object({
   username: z
@@ -36,6 +37,7 @@ const signUpSchema = z.object({
 export default function SignUpForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string>("");
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -48,6 +50,7 @@ export default function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
     setIsLoading(true);
+    setError(""); // 重置錯誤訊息
 
     try {
       const response = await fetch("/api/register", {
@@ -58,16 +61,30 @@ export default function SignUpForm() {
         body: JSON.stringify(values),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("註冊失敗");
+        throw new Error(data.error || "註冊失敗");
       }
 
-      const data = await response.json();
-      // console.log("註冊成功", data);
-      // router.push("/profile");
-      window.location.href = "/profile";
+      const callback = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+        callbackUrl: "/profile",
+      });
+
+      if (callback?.error) {
+        setError(
+          callback.error === "Invalid credentials"
+            ? "帳號或密碼錯誤"
+            : "登入失敗"
+        );
+      } else {
+        router.push("/profile");
+      }
     } catch (error) {
-      console.error("Error:", error);
+      setError(error instanceof Error ? error.message : "註冊過程發生錯誤");
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +94,6 @@ export default function SignUpForm() {
     <div>
       <CardHeader className="text-center">
         <CardTitle>註冊</CardTitle>
-        {/* <CardDescription>新增會員</CardDescription> */}
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -94,9 +110,6 @@ export default function SignUpForm() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  {/* <FormDescription>
-                    This is your public display name.
-                  </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -110,7 +123,6 @@ export default function SignUpForm() {
                   <FormControl>
                     <Input placeholder="" {...field} />
                   </FormControl>
-                  {/* <FormDescription>This is your Email.</FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -124,10 +136,7 @@ export default function SignUpForm() {
                   <FormControl>
                     <Input type="password" placeholder="" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    密碼必須至少包含 8 個字符，最多 50
-                    個字符，並包含至少一個大寫字母，一個小寫字母，一個數字和一個特殊字符。
-                  </FormDescription>
+                  <FormDescription>密碼長度不可小於 8 個字元</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

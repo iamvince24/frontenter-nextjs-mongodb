@@ -27,7 +27,6 @@ export async function getCurrentUser() {
       emailVerified: currentUser.emailVerified?.toISOString() || null,
     };
   } catch (error) {
-    // 這不是串接 API 而是直接與 db 溝通，所以我們直接回傳 null
     return null;
   }
 }

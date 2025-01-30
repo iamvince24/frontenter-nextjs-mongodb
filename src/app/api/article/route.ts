@@ -17,6 +17,7 @@ const articleSchema = z.object({
   totalDays: z.number().min(1, "總天數必須大於0"),
   weeklyHours: z.number().min(1, "每週小時數必須大於0"),
   content: z.string().min(1, "內容是必填項"),
+  imageUrl: z.string().url(),
 });
 
 export async function POST(req: NextRequest) {
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
       technology,
       totalDays,
       weeklyHours,
+      imageUrl,
     } = result.data;
 
     const article = await prisma.article.create({
@@ -65,6 +67,7 @@ export async function POST(req: NextRequest) {
         technology,
         totalDays,
         weeklyHours,
+        imageUrl,
       },
     });
 
