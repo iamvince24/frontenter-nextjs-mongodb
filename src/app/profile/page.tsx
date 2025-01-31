@@ -1,13 +1,8 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/actions/getCurrentUser";
 import ProfilePage from "@/components/page/profile/ProfilePage";
 
-export default function Profile() {
-  return (
-    <div>
-      <ProfilePage />
-    </div>
-  );
+export default async function Profile() {
+  const currentUser = await getCurrentUser();
+
+  return <ProfilePage currentUser={currentUser} />;
 }

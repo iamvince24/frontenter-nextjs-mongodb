@@ -6,7 +6,18 @@ export async function getSession() {
   return await getServerSession(authOptions);
 }
 
-export async function getCurrentUser() {
+export interface CurrentUser {
+  id: string;
+  email: string;
+  username: string;
+  emailVerified: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  bio: string | null;
+  profileImage: string | null;
+}
+
+export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
     const session = await getSession();
 
@@ -22,9 +33,9 @@ export async function getCurrentUser() {
 
     return {
       ...currentUser,
-      createdAt: currentUser.createdAt.toISOString(),
-      updatedAt: currentUser.updatedAt.toISOString(),
-      emailVerified: currentUser.emailVerified?.toISOString() || null,
+      createdAt: currentUser.createdAt,
+      updatedAt: currentUser.updatedAt,
+      emailVerified: currentUser.emailVerified || null,
     };
   } catch (error) {
     return null;
