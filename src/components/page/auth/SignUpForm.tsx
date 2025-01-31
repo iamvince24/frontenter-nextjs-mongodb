@@ -50,7 +50,7 @@ export default function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
     setIsLoading(true);
-    setError(""); // 重置錯誤訊息
+    setError("");
 
     try {
       const response = await fetch("/api/register", {

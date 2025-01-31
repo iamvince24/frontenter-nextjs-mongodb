@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/actions/getCurrentUser";
-import ProfilePage from "@/components/page/profile/ProfilePage";
+import ProfilePage from "@/features/profile/page/ProfilePage";
 
 export default async function Profile() {
   const currentUser = await getCurrentUser();
