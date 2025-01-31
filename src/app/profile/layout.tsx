@@ -1,19 +1,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { NavButton } from "@/components/ui/NavButton";
-import Navbar from "@/components/page/navbar/Navbar";
-import { getCurrentUser } from "@/actions/getCurrentUser";
 
 export default async function ProfileTab({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const currentUser = await getCurrentUser();
-
   return (
     <>
-      <Navbar currentUsername={currentUser?.username} />
       <div>
         <div className="flex justify-center">
           <Link href="/profile">

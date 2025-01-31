@@ -32,13 +32,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const getCurrentUsername = async () => {
-  //   const currentUser = await getCurrentUser();
+  const getCurrentUsername = async () => {
+    const currentUser = await getCurrentUser();
 
-  //   return currentUser ? currentUser.username : "";
-  // };
+    return currentUser ? currentUser.username : "";
+  };
 
-  // const currentUsername = await getCurrentUsername();
+  const currentUsername = await getCurrentUsername();
 
   return (
     <html lang="en">
@@ -48,6 +48,7 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
+        <Navbar currentUsername={currentUsername} />
         {children}
         <Footer />
       </body>

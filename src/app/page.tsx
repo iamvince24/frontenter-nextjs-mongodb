@@ -2,7 +2,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Button } from "@/components/ui/button";
 import { LuPencilRuler } from "react-icons/lu";
 import { RxDividerHorizontal } from "react-icons/rx";
-import Navbar from "@/components/page/navbar/Navbar";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 
 export default async function HomePage() {
@@ -10,7 +9,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <Navbar currentUsername={currentUser?.username} />
       <main className="w-full flex min-h-screen flex-col items-center justify-between">
         <section className="w-full h-[300px] bg-[url('/keyVisual.jpg')] bg-cover bg-no-repeat bg-center flex flex-col justify-between items-center py-8 md:h-[600px]">
           <></>

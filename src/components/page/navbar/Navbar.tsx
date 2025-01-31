@@ -21,6 +21,7 @@ const links: { title: string; href: string; description: string }[] = [
   },
 ];
 
+// TODO: Use other method to determine if the user is logged in
 function Navbar({ currentUsername }: { currentUsername?: string }) {
   const path = usePathname();
   const isAdmin = path.includes("/profile");
