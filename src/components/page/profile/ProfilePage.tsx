@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { CurrentUser } from "@/actions/getCurrentUser";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 
 interface ProfilePageProps {
   currentUser: CurrentUser | null;
@@ -72,9 +79,22 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
                 />
               </div>
               <div className="w-full">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 flex align-center">
                   電子郵件
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <div className="text-base ml-1">
+                          <IoIosInformationCircleOutline />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>目前不能更改</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </label>
+
                 <p className="mt-1 text-gray-900">{currentUser?.email}</p>
                 {/* <Input
                   type="email"
