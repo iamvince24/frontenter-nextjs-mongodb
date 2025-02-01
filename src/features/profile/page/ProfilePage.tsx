@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { CurrentUser } from "@/actions/getCurrentUser";
-import ProfileForm from "../component/ProfileForm";
+import ProfileForm from "../components/ProfileForm";
 
 interface ProfilePageProps {
   currentUser: CurrentUser | null;

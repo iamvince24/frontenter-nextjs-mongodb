@@ -17,27 +17,10 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-
-const signUpSchema = z.object({
-  username: z
-    .string({ required_error: "Username 為必填欄位" })
-    .regex(
-      /^[a-zA-Z0-9_]*$/,
-      "只能包含英文、數字及底線，不可包含空白及特殊符號"
-    ),
-  email: z
-    .string({ required_error: "Email 為必填欄位" })
-    .email("請輸入正確的 Email"),
-  password: z
-    .string({ required_error: "Password 為必填欄位" })
-    .min(8, "密碼長度不可小於 8 個字元"),
-});
+import { signUpSchema, useRegister } from "../hooks/useRegister";
 
 export default function SignUpForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string>("");
+  const { register, isPending, error } = useRegister();
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -48,47 +31,9 @@ export default function SignUpForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof signUpSchema>) {
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "註冊失敗");
-      }
-
-      const callback = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-        callbackUrl: "/profile",
-      });
-
-      if (callback?.error) {
-        setError(
-          callback.error === "Invalid credentials"
-            ? "帳號或密碼錯誤"
-            : "登入失敗"
-        );
-      } else {
-        router.push("/profile");
-      }
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "註冊過程發生錯誤");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
+    register(values);
+  };
 
   return (
     <div>
@@ -142,7 +87,7 @@ export default function SignUpForm() {
               )}
             />
             <div className="flex justify-center w-full">
-              <Button type="submit" className="w-32" disabled={isLoading}>
+              <Button type="submit" className="w-32" disabled={isPending}>
                 註冊
               </Button>
             </div>

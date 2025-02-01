@@ -5,6 +5,7 @@ import Navbar from "@/components/page/navbar/Navbar";
 import Footer from "@/components/page/footer/Footer";
 import "./globals.css";
 import { getCurrentUser } from "@/actions/getCurrentUser";
+import Providers from "./providers";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -48,9 +49,11 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <Navbar currentUsername={currentUsername} />
-        {children}
-        <Footer />
+        <Providers>
+          <Navbar currentUsername={currentUsername} />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

@@ -17,58 +17,22 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
-
-const LogInSchema = z.object({
-  email: z
-    .string({ required_error: "Email 為必填欄位" })
-    .email("請輸入正確的 Email"),
-  password: z
-    .string({ required_error: "Password 為必填欄位" })
-    .min(8, "密碼長度不可小於 8 個字元"),
-});
+import { loginSchema, useLogin } from "../hooks/useLogin";
 
 export default function LogInForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const { login, isPending, error } = useLogin();
 
-  const form = useForm<z.infer<typeof LogInSchema>>({
-    resolver: zodResolver(LogInSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof LogInSchema>) {
-    setIsLoading(true);
-
-    try {
-      const callback = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-        callbackUrl: "/profile",
-      });
-
-      if (callback?.error) {
-        const errorMessage =
-          callback.error === "Invalid credentials"
-            ? "帳號或密碼錯誤"
-            : "登入失敗";
-        console.error(errorMessage);
-        // 可以在 UI 上顯示錯誤訊息
-      } else {
-        console.log("登入成功");
-        router.push("/profile");
-      }
-    } catch (error) {
-      console.error("登入失敗", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
+  const onSubmit = (values: z.infer<typeof loginSchema>) => {
+    login(values);
+  };
   return (
     <div>
       <CardHeader className="text-center">
@@ -108,7 +72,7 @@ export default function LogInForm() {
               )}
             />
             <div className="flex justify-center w-full">
-              <Button type="submit" className="w-32" disabled={isLoading}>
+              <Button type="submit" className="w-32" disabled={isPending}>
                 登入
               </Button>
             </div>
