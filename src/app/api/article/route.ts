@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import { z } from "zod";
 import prisma from "@/lib/prismadb";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 
 const articleSchema = z.object({
@@ -58,15 +56,15 @@ export async function POST(req: NextRequest) {
         title,
         content,
         authorId: currentUser?.id,
-        className,
-        introduction,
-        classLocation,
-        classType,
-        fee,
-        teachingMethod,
-        technology,
-        totalDays,
-        weeklyHours,
+        // className,
+        // introduction,
+        // classLocation,
+        // classType,
+        // fee,
+        // teachingMethod,
+        // technology,
+        // totalDays,
+        // weeklyHours,
         imageUrl,
       },
     });

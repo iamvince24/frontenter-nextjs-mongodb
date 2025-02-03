@@ -5,10 +5,15 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { CurrentUser } from "@/actions/getCurrentUser";
 import ProfileForm from "../components/ProfileForm";
-
+import { profileFormSchema, useUpdateProfile } from "../hooks/useUpdateProfile";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 interface ProfilePageProps {
   currentUser: CurrentUser | null;
 }
+
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const ProfilePage = ({ currentUser }: ProfilePageProps) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,6 +24,16 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
     bio: currentUser?.bio || "",
   });
 
+  const { mutateAsync: updateProfile, isPending, error } = useUpdateProfile();
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      username: formData.username,
+      bio: formData.bio,
+    },
+  });
+
   if (!currentUser?.id) {
     return <p>Please sign in.</p>;
   }
@@ -27,15 +42,12 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
     setIsEditing(true);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: ProfileFormValues) => {
     setIsLoading(true);
+    await updateProfile(values);
+    setFormData({ ...formData, ...values });
     setIsLoading(false);
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
@@ -55,82 +67,12 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
         </CardHeader>
         <CardContent>
           {isEditing ? (
-            // <form
-            //   onSubmit={handleSubmit}
-            //   className="flex flex-col items-center space-y-4"
-            // >
-            //   <div className="w-full">
-            //     <label className="block text-sm font-medium text-gray-700">
-            //       使用者名稱
-            //     </label>
-            //     <Input
-            //       type="text"
-            //       name="username"
-            //       value={formData.username}
-            //       onChange={handleChange}
-            //       className="mt-1 block w-full"
-            //     />
-            //   </div>
-            //   <div className="w-full">
-            //     <label className="text-sm font-medium text-gray-700 flex align-center">
-            //       電子郵件
-            //       <TooltipProvider>
-            //         <Tooltip>
-            //           <TooltipTrigger>
-            //             <div className="text-base ml-1">
-            //               <IoIosInformationCircleOutline />
-            //             </div>
-            //           </TooltipTrigger>
-            //           <TooltipContent>
-            //             <p>目前不能更改</p>
-            //           </TooltipContent>
-            //         </Tooltip>
-            //       </TooltipProvider>
-            //     </label>
-
-            //     <p className="mt-1 text-gray-900">{currentUser?.email}</p>
-            //     {/* <Input
-            //       type="email"
-            //       name="email"
-            //       value={formData.email}
-            //       onChange={handleChange}
-            //       className="mt-1 block w-full"
-            //     /> */}
-            //   </div>
-            //   <div className="w-full">
-            //     <label className="block text-sm font-medium text-gray-700">
-            //       自我介紹
-            //     </label>
-            //     <Input
-            //       type="text"
-            //       name="bio"
-            //       value={formData.bio}
-            //       onChange={handleChange}
-            //       className="mt-1 block w-full"
-            //     />
-            //   </div>
-
-            //   <div className="flex gap-4">
-            //     <Button type="submit" disabled={isLoading}>
-            //       {isLoading ? "儲存中..." : "儲存變更"}
-            //     </Button>
-            //     <Button
-            //       type="button"
-            //       variant="outline"
-            //       onClick={handleCancel}
-            //       disabled={isLoading}
-            //     >
-            //       取消
-            //     </Button>
-            //   </div>
-            // </form>
             <ProfileForm
               currentUser={currentUser}
-              formData={formData}
-              isLoading={isLoading}
+              isLoading={isLoading || isPending}
               onSubmit={handleSubmit}
-              onChange={handleChange}
               onCancel={handleCancel}
+              form={form}
             />
           ) : (
             <div className="space-y-4">

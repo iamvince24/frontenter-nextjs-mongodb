@@ -22,7 +22,7 @@ model User {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   bio            String?
-  profileImage   String?
+  // profileImage   String?
   articles       Article[]    @relation("UserArticles")
   collections Collection[]
   // accounts       Account[]
@@ -41,7 +41,7 @@ model Article {
   updatedAt       DateTime  @updatedAt
   content         String
   imageUrl        String?
-    tags        Tag[]       @relation(fields: [tagIds], references: [id])
+tags             Tag[]       @relation(fields: [tagIds], references: [id])
   tagIds      String[]    @db.ObjectId
   collections Collection[]
     // className       String

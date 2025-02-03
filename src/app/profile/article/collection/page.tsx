@@ -8,7 +8,8 @@ import FavoriteArticlePage from "@/components/article/FavoriteArticlePage";
 const ArticleCollection: React.FC = async () => {
   const currentUser = await getCurrentUser();
   const authorId = currentUser?.id;
-  const favoriteArticles = currentUser?.favoriteArticles;
+  const favoriteArticles = [""];
+  // const favoriteArticles = currentUser?.collections || [];
 
   return (
     <div>
