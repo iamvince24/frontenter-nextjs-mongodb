@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/tooltip";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { profileFormSchema } from "../hooks/useUpdateProfile";
 import { UseFormReturn } from "react-hook-form";
 import {
   Form,
@@ -21,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { profileFormSchema } from "../hooks/useUpdateProfile";
 
 interface ProfileFormProps {
   currentUser: CurrentUser;

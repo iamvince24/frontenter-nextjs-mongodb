@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import prisma from "@/lib/prismadb";
 import { getCurrentUser } from "@/actions/getCurrentUser";
 import { profileFormSchema } from "@/features/profile/hooks/useUpdateProfile";
@@ -41,7 +40,7 @@ export async function POST(req: NextRequest) {
     // }
 
     const user = await prisma.user.update({
-      where: { id: currentUser.id },
+      where: { id: currentUser.currentUser?.id },
       data: {
         username,
         bio,

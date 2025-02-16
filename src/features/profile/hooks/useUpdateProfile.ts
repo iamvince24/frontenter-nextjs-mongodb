@@ -13,20 +13,12 @@ export const profileFormSchema = z.object({
 
 type ProfileFormData = z.infer<typeof profileFormSchema>;
 
-interface UpdateProfileError {
-  errors?: {
-    formErrors: string[];
-    fieldErrors: Record<string, string[]>;
-  };
-  error?: string;
-}
-
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation<any, Error, ProfileFormData>({
     mutationFn: async (data: ProfileFormData) => {
-      const response = await fetch("/api/profile", {
+      const response = await fetch("/api/profile/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
