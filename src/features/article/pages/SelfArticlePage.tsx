@@ -1,31 +1,25 @@
-"use client";
+'use client'
 
-import ArticleCard from "../../../components/article/ArticleCard";
-import { CurrentUser } from "@/actions/getCurrentUser";
-import { useAuthorArticles } from "../../article/hooks/useAuthorArticles";
-import { Spinner } from "@/components/ui/spinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FaExclamationTriangle } from "react-icons/fa";
-import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import ArticleCard from '../../../components/article/ArticleCard'
+import { CurrentUser } from '@/actions/getCurrentUser'
+import { useAuthorArticles } from '../../article/hooks/useAuthorArticles'
+import { Spinner } from '@/components/ui/spinner'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { FaExclamationTriangle } from 'react-icons/fa'
+import { Card, CardContent, CardDescription } from '@/components/ui/card'
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 
 interface SelfArticlePageProps {
-  currentUser: CurrentUser;
+  currentUser: CurrentUser
 }
 
 const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
-  const authorId = currentUser.id;
+  const authorId = currentUser.id
 
-  const { data: articles, isLoading, error } = useAuthorArticles(authorId);
+  const { data: articles, isLoading, error } = useAuthorArticles(authorId)
 
   if (isLoading) {
-    return (
-      <div className="w-full flex justify-center items-center py-20">
-        <div className="flex flex-col items-center gap-2">
-          <Spinner className="h-8 w-8" />
-          <p className="text-sm text-muted-foreground">載入文章中...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner text="載入文章中..." />
   }
 
   if (error) {
@@ -34,12 +28,10 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
         <Alert variant="destructive">
           <FaExclamationTriangle className="h-4 w-4" />
           <AlertTitle>載入失敗</AlertTitle>
-          <AlertDescription>
-            無法載入文章: {error instanceof Error ? error.message : "未知錯誤"}
-          </AlertDescription>
+          <AlertDescription>無法載入文章: {error instanceof Error ? error.message : '未知錯誤'}</AlertDescription>
         </Alert>
       </div>
-    );
+    )
   }
 
   if (articles && articles.length === 0) {
@@ -62,21 +54,19 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
                   d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                 />
               </svg>
-              <CardDescription className="text-base">
-                您尚未發表任何文章
-              </CardDescription>
+              <CardDescription className="text-base">您尚未發表任何文章</CardDescription>
             </div>
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
     <div className="w-full">
       <div className="flex flex-row flex-wrap justify-center gap-6">
         {articles &&
-          articles.map((article) => {
+          articles.map(article => {
             return (
               <ArticleCard
                 key={article.id}
@@ -84,11 +74,11 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
                 // isEditorAble={isEditorAble}
                 // isFavorite={favoriteArticles?.includes(article.id) || }
               />
-            );
+            )
           })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SelfArticlePage;
+export default SelfArticlePage
