@@ -3,11 +3,9 @@
 import ArticleCard from '../../../components/article/ArticleCard'
 import { CurrentUser } from '@/actions/getCurrentUser'
 import { useAuthorArticles } from '../../article/hooks/useAuthorArticles'
-import { Spinner } from '@/components/ui/spinner'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { FaExclamationTriangle } from 'react-icons/fa'
 import { Card, CardContent, CardDescription } from '@/components/ui/card'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import { ErrorAlert } from '@/components/error/ErrorAlert'
 
 interface SelfArticlePageProps {
   currentUser: CurrentUser
@@ -23,15 +21,7 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
   }
 
   if (error) {
-    return (
-      <div className="w-full py-10 px-4 max-w-3xl mx-auto">
-        <Alert variant="destructive">
-          <FaExclamationTriangle className="h-4 w-4" />
-          <AlertTitle>載入失敗</AlertTitle>
-          <AlertDescription>無法載入文章: {error instanceof Error ? error.message : '未知錯誤'}</AlertDescription>
-        </Alert>
-      </div>
-    )
+    return <ErrorAlert error={error} />
   }
 
   if (articles && articles.length === 0) {
