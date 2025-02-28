@@ -3,7 +3,7 @@ import Link from "next/link";
 import { NavButton } from "@/components/ui/NavButton";
 import ArticleCard from "@/components/article/ArticleCard";
 import { CurrentUser, getCurrentUser } from "@/actions/getCurrentUser";
-import FavoriteArticlePage from "@/features/profile/page/FavoriteArticlePage";
+import FavoriteArticlePage from "@/features/article/pages/FavoriteArticlePage";
 
 const ArticleCollection: React.FC = async () => {
   const currentUser = await getCurrentUser();

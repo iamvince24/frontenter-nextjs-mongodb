@@ -1,6 +1,10 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "../lib/prismadb";
+import {
+  Article,
+  Collection,
+} from "@/features/article/hooks/useFavoriteArticles";
 
 export async function getSession() {
   return await getServerSession(authOptions);
@@ -46,6 +50,8 @@ export async function getCurrentUser(refetch: boolean = false): Promise<{
           updatedAt: true,
           bio: true,
           profileImage: true,
+          articles: true,
+          collections: true,
         },
       }),
     });

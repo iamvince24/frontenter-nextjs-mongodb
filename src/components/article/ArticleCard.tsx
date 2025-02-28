@@ -7,7 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 import FavoriteBtn from "../ui/FavoriteBtn";
 import { Button } from "../ui/button";
-import { Article } from "@/features/profile/hooks/useFavoriteArticles";
+import { Article } from "@/features/article/hooks/useFavoriteArticles";
 
 export default function ArticleCard({
   articleData,

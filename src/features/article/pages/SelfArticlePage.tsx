@@ -1,57 +1,48 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import ArticleCard from "../../../components/article/ArticleCard";
-import { useSession } from "next-auth/react";
+import { CurrentUser } from "@/actions/getCurrentUser";
+import { useAuthorArticles } from "../../article/hooks/useAuthorArticles";
+import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
-import { Spinner } from "../../../components/ui/spinner";
-import { CurrentUser } from "@/actions/getCurrentUser";
-import { useFavoriteArticles } from "../hooks/useFavoriteArticles";
 
-const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
-  const userId = currentUser?.id as string;
+interface SelfArticlePageProps {
+  currentUser: CurrentUser;
+}
 
-  const {
-    data: collections,
-    isLoading,
-    isError,
-    error,
-  } = useFavoriteArticles(userId);
+const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
+  const authorId = currentUser.id;
 
-  const articles = collections?.map((collection) => collection.article) || [];
-
-  const favoriteArticleIds =
-    collections?.map((collection) => collection.articleId) || [];
+  const { data: articles, isLoading, error } = useAuthorArticles(authorId);
 
   if (isLoading) {
     return (
       <div className="w-full flex justify-center items-center py-20">
         <div className="flex flex-col items-center gap-2">
           <Spinner className="h-8 w-8" />
-          <p className="text-sm text-muted-foreground">載入收藏文章中...</p>
+          <p className="text-sm text-muted-foreground">載入文章中...</p>
         </div>
       </div>
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <div className="w-full py-10 px-4 max-w-3xl mx-auto">
         <Alert variant="destructive">
           <FaExclamationTriangle className="h-4 w-4" />
           <AlertTitle>載入失敗</AlertTitle>
           <AlertDescription>
-            無法載入收藏文章:{" "}
-            {error instanceof Error ? error.message : "未知錯誤"}
+            無法載入文章: {error instanceof Error ? error.message : "未知錯誤"}
           </AlertDescription>
         </Alert>
       </div>
     );
   }
 
-  if (articles.length === 0) {
+  if (articles && articles.length === 0) {
     return (
       <div className="w-full py-20 flex justify-center">
         <Card className="w-full max-w-md">
@@ -72,7 +63,7 @@ const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
                 />
               </svg>
               <CardDescription className="text-base">
-                您尚未收藏任何文章
+                您尚未發表任何文章
               </CardDescription>
             </div>
           </CardContent>
@@ -84,16 +75,20 @@ const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
   return (
     <div className="w-full">
       <div className="flex flex-row flex-wrap justify-center gap-6">
-        {articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            articleData={article as any}
-            isFavorite={true}
-          />
-        ))}
+        {articles &&
+          articles.map((article) => {
+            return (
+              <ArticleCard
+                key={article.id}
+                articleData={article}
+                // isEditorAble={isEditorAble}
+                // isFavorite={favoriteArticles?.includes(article.id) || }
+              />
+            );
+          })}
       </div>
     </div>
   );
 };
 
-export default FavoriteArticlePage;
+export default SelfArticlePage;
