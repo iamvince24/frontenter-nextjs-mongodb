@@ -3,52 +3,103 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-// export async function POST(req: Request) {
-//   const { userId, articleId } = await req.json();
+// GET endpoint to fetch a user's collections
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const userId = url.searchParams.get("userId");
 
-//   try {
-//     const userArticleLike = await prisma.userArticleLike.create({
-//       data: {
-//         userId: userId,
-//         articleId: articleId,
-//       },
-//     });
+  if (!userId) {
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+  }
 
-//     return NextResponse.json(userArticleLike);
-//   } catch (error) {
-//     return NextResponse.json(
-//       { error: "Unable to like article" },
-//       { status: 500 }
-//     );
-//   }
-// }
+  try {
+    // Get user's collections with article details
+    const collections = await prisma.collection.findMany({
+      where: { userId },
+      include: {
+        article: true,
+      },
+    });
 
+    return NextResponse.json({ collections });
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch collections" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST endpoint to add an article to a user's collection
 export async function POST(req: Request) {
   const { userId, articleId } = await req.json();
 
-  try {
-    // 獲取用戶的現有最愛文章列表
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { favoriteArticles: true },
-    });
-
-    let updatedFavoriteArticles = user?.favoriteArticles || [];
-    // 如果文章 id 不在最愛文章列表中，則添加到列表中
-    if (!updatedFavoriteArticles.includes(articleId)) {
-      updatedFavoriteArticles.push(articleId);
-    }
-
-    // 更新用戶的最愛文章列表
-    await prisma.user.update({
-      where: { id: userId },
-      data: { favoriteArticles: updatedFavoriteArticles },
-    });
-
-    return NextResponse.json({ message: "Article added to favorites" });
-  } catch (error) {
+  if (!userId || !articleId) {
     return NextResponse.json(
-      { error: "Unable to add article to favorites" },
+      { error: "User ID and Article ID are required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Create a new collection entry (or ignore if it already exists)
+    const collection = await prisma.collection.upsert({
+      where: {
+        userId_articleId: {
+          userId,
+          articleId,
+        },
+      },
+      update: {}, // No updates needed if it exists
+      create: {
+        userId,
+        articleId,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Article added to collection",
+      collection,
+    });
+  } catch (error) {
+    console.error("Error adding to collection:", error);
+    return NextResponse.json(
+      { error: "Unable to add article to collection" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE endpoint to remove an article from a user's collection
+export async function DELETE(req: Request) {
+  const { userId, articleId } = await req.json();
+
+  if (!userId || !articleId) {
+    return NextResponse.json(
+      { error: "User ID and Article ID are required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Delete the collection entry
+    await prisma.collection.delete({
+      where: {
+        userId_articleId: {
+          userId,
+          articleId,
+        },
+      },
+    });
+
+    return NextResponse.json({
+      message: "Article removed from collection",
+    });
+  } catch (error) {
+    console.error("Error removing from collection:", error);
+    return NextResponse.json(
+      { error: "Unable to remove article from collection" },
       { status: 500 }
     );
   }

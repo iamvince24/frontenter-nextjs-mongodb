@@ -2,8 +2,8 @@ import * as React from "react";
 import Link from "next/link";
 import { NavButton } from "@/components/ui/NavButton";
 import ArticleCard from "@/components/article/ArticleCard";
-import { getCurrentUser } from "@/actions/getCurrentUser";
-import FavoriteArticlePage from "@/components/article/FavoriteArticlePage";
+import { CurrentUser, getCurrentUser } from "@/actions/getCurrentUser";
+import FavoriteArticlePage from "@/features/profile/page/FavoriteArticlePage";
 
 const ArticleCollection: React.FC = async () => {
   const currentUser = await getCurrentUser();
@@ -15,8 +15,9 @@ const ArticleCollection: React.FC = async () => {
     <div>
       文章搜集
       <FavoriteArticlePage
+        currentUser={currentUser as CurrentUser}
         // authorId={authorId}
-        favoriteArticles={favoriteArticles}
+        // favoriteArticles={favoriteArticles}
       />
     </div>
   );

@@ -26,7 +26,7 @@ export default async function RootLayout({
 }>) {
   const getCurrentUsername = async () => {
     const currentUser = await getCurrentUser();
-    return currentUser ? currentUser.currentUser?.username : "";
+    return currentUser ? currentUser?.username : "";
   };
 
   const currentUsername = await getCurrentUsername();

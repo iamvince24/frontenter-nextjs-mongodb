@@ -7,25 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 import FavoriteBtn from "../ui/FavoriteBtn";
 import { Button } from "../ui/button";
-
-interface Article {
-  id: string;
-  authorId?: string;
-  title: string;
-  createdAt: string;
-  updatedAt: string;
-  className: string;
-  introduction: string;
-  classLocation: string;
-  classType: string;
-  fee: number;
-  teachingMethod: string;
-  technology: string;
-  totalDays: number;
-  weeklyHours: number;
-  content: string;
-  imageUrl?: string;
-}
+import { Article } from "@/features/profile/hooks/useFavoriteArticles";
 
 export default function ArticleCard({
   articleData,
@@ -65,7 +47,7 @@ export default function ArticleCard({
               width={1000}
               height={1000}
               src={imageUrl}
-              alt={className}
+              alt={className || articleData.title}
             />
           )}
         </div>
