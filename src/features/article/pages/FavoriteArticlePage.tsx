@@ -6,11 +6,16 @@ import { useFavoriteArticles } from '../../article/hooks/useFavoriteArticles'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
+import { useEffect } from 'react'
 
 const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
   const userId = currentUser?.id as string
 
   const { data: collections, isLoading, isError, error, refetch } = useFavoriteArticles(userId)
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   if (isLoading) {
     return <LoadingSpinner text="載入文章中..." />

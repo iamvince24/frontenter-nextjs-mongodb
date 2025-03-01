@@ -6,6 +6,7 @@ import { useAuthorArticles } from '../../article/hooks/useAuthorArticles'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
+import { useEffect } from 'react'
 
 interface SelfArticlePageProps {
   currentUser: CurrentUser
@@ -15,6 +16,10 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
   const authorId = currentUser.id
 
   const { data: articles, isLoading, error, isError, refetch } = useAuthorArticles(authorId)
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   if (isLoading) {
     return <LoadingSpinner text="載入文章中..." />
