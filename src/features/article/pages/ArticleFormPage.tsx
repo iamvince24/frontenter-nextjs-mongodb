@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-
 import { z } from 'zod'
 import Image from 'next/image'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,23 +9,15 @@ import { CldUploadWidget, CldUploadWidgetProps } from 'next-cloudinary'
 import { Button } from '../../../components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import router from 'next/router'
 
-const ArticleFormSchema = z.object({
+export const ArticleSchema = z.object({
   title: z.string().min(1, '標題是必填項'),
-  className: z.string().min(1, '課程名稱是必填項'),
-  introduction: z.string().min(1, '簡介是必填項'),
-  classLocation: z.string().min(1, '上課地點是必填項'),
-  classType: z.string().min(1, '教學模式是必填項'),
-  fee: z.number().min(0, '費用不能為負數'),
-  teachingMethod: z.string().min(1, '教學方式是必填項'),
-  technology: z.string().min(1, '技術是必填項'),
-  totalDays: z.number().min(1, '總天數必須大於0'),
-  weeklyHours: z.number().min(1, '每週小時數必須大於0'),
   content: z.string().min(1, '內容是必填項'),
   imageUrl: z.string().url(),
 })
 
-type ArticleFormInputs = z.infer<typeof ArticleFormSchema>
+type ArticleFormInputs = z.infer<typeof ArticleSchema>
 
 export default function ArticleFormPage({ authorId }: { authorId: string | undefined }) {
   const {
@@ -36,7 +27,7 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
     setValue,
     reset,
   } = useForm<ArticleFormInputs>({
-    resolver: zodResolver(ArticleFormSchema),
+    resolver: zodResolver(ArticleSchema),
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -60,8 +51,7 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
         throw new Error('Failed to create article')
       }
 
-      const article = await response.json()
-      // router.push(`/articles/${article.id}`);
+      router.push(`/profile/article/self`)
       setImageUrl('')
       reset()
     } catch (error) {
