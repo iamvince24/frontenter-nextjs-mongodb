@@ -11,10 +11,7 @@ const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
   const userId = currentUser?.id as string
 
   const { data: collections, isLoading, isError, error } = useFavoriteArticles(userId)
-
   const articles = collections?.map(collection => collection.article) || []
-
-  const favoriteArticleIds = collections?.map(collection => collection.articleId) || []
 
   if (isLoading) {
     return <LoadingSpinner text="載入文章中..." />

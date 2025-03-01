@@ -14,13 +14,13 @@ interface SelfArticlePageProps {
 const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
   const authorId = currentUser.id
 
-  const { data: articles, isLoading, error } = useAuthorArticles(authorId)
+  const { data: articles, isLoading, error, isError } = useAuthorArticles(authorId)
 
   if (isLoading) {
     return <LoadingSpinner text="載入文章中..." />
   }
 
-  if (error) {
+  if (isError) {
     return <ErrorAlert error={error} />
   }
 
