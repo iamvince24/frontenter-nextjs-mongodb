@@ -1,25 +1,23 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import Image from "next/image";
-import { FaLocationDot } from "react-icons/fa6";
-import { IoIosArrowForward } from "react-icons/io";
-
-import FavoriteBtn from "../ui/FavoriteBtn";
-import { Button } from "../ui/button";
-import { Article } from "@/features/article/hooks/useFavoriteArticles";
+import * as React from 'react'
+import Image from 'next/image'
+import { FaLocationDot } from 'react-icons/fa6'
+import { IoIosArrowForward } from 'react-icons/io'
+import FavoriteBtn from '../ui/FavoriteBtn'
+import { Button } from '../ui/button'
+import { Article } from '@/features/article/hooks/useFavoriteArticles'
 
 export default function ArticleCard({
   articleData,
   isFavorite,
   isEditorAble,
 }: {
-  articleData: Article;
-  isFavorite?: boolean;
-  isEditorAble?: boolean;
+  articleData: Article
+  isFavorite?: boolean
+  isEditorAble?: boolean
 }) {
-  const { id, authorId, classLocation, imageUrl, className, title, content } =
-    articleData;
+  const { id, authorId, classLocation, imageUrl, className, title, content } = articleData
 
   return (
     <div className="w-[330px] h-[430px] m-2.5 p-3 text-[var(--text-size-h3)] border border-[var(--primary-color)] rounded-md flex flex-col items-center justify-between">
@@ -29,15 +27,7 @@ export default function ArticleCard({
           <FaLocationDot color="lightgreen" className="w-6 h-6 mx-5" />
           <div>{classLocation}</div>
         </div>
-        <div>
-          {authorId && (
-            <FavoriteBtn
-              userId={authorId}
-              articleId={id}
-              favoriteStatus={isFavorite}
-            />
-          )}
-        </div>
+        <div>{authorId && <FavoriteBtn userId={authorId} articleId={id} favoriteStatus={isFavorite || false} />}</div>
       </div>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
         <div className="w-[250px] h-[150px] overflow-hidden ">
@@ -52,9 +42,7 @@ export default function ArticleCard({
           )}
         </div>
         <p className="inline m-0 whitespace-nowrap tracking-[1.5px]">{title}</p>
-        <div className="h-[70px] px-[15px] py-0 leading-[24px] tracking-[1px]">
-          {content}
-        </div>
+        <div className="h-[70px] px-[15px] py-0 leading-[24px] tracking-[1px]">{content}</div>
         <div className="w-full flex justify-center items-center my-[5px] mb-[50px] px-[20px] py-0">
           <div className="mr-[5px] transition-transform duration-[600ms] ease-linear hover:-translate-x-[15px]">
             read more
@@ -64,5 +52,5 @@ export default function ArticleCard({
         {isEditorAble && <Button>編輯</Button>}
       </div>
     </div>
-  );
+  )
 }
