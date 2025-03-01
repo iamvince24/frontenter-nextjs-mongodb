@@ -7,27 +7,54 @@ import { IoIosArrowForward } from 'react-icons/io'
 import FavoriteBtn from '../ui/FavoriteBtn'
 import { Button } from '../ui/button'
 import { Article } from '@/features/article/hooks/useFavoriteArticles'
+import { useFavorite } from '@/features/article/hooks/useFavorite'
+import { LoadingSpinner } from '../loading/LoadingSpinner'
+
+const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="w-[330px] h-[430px] m-2.5 p-3 text-[var(--text-size-h3)] border border-[var(--primary-color)] rounded-md flex flex-col items-center justify-between">
+      {children}
+    </div>
+  )
+}
 
 export default function ArticleCard({
   articleData,
-  isFavorite,
+  userId,
   isEditorAble,
+  onSuccess,
 }: {
   articleData: Article
-  isFavorite?: boolean
+  userId: string
   isEditorAble?: boolean
+  onSuccess?: () => Promise<void>
 }) {
-  const { id, authorId, classLocation, imageUrl, className, title, content } = articleData
+  const { id, authorId, classLocation, imageUrl, className, title, content, isCollected } = articleData
+
+  const { toggleFavorite, isLoading } = useFavorite({
+    userId: userId || '',
+    articleId: id,
+    isCollected,
+    onSuccess,
+  })
+
+  if (isLoading) {
+    return (
+      <ArticleCardStyle>
+        <LoadingSpinner />
+      </ArticleCardStyle>
+    )
+  }
 
   return (
-    <div className="w-[330px] h-[430px] m-2.5 p-3 text-[var(--text-size-h3)] border border-[var(--primary-color)] rounded-md flex flex-col items-center justify-between">
+    <ArticleCardStyle>
       <div className="w-full flex flex-row justify-between items-center my-[30px] mt-0 mb-[20px]">
         <div></div>
         <div className="flex flex-row">
           <FaLocationDot color="lightgreen" className="w-6 h-6 mx-5" />
           <div>{classLocation}</div>
         </div>
-        <div>{authorId && <FavoriteBtn userId={authorId} articleId={id} favoriteStatus={isFavorite || false} />}</div>
+        <div>{authorId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}</div>
       </div>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
         <div className="w-[250px] h-[150px] overflow-hidden ">
@@ -51,6 +78,6 @@ export default function ArticleCard({
         </div>
         {isEditorAble && <Button>編輯</Button>}
       </div>
-    </div>
+    </ArticleCardStyle>
   )
 }

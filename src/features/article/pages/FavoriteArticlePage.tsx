@@ -29,7 +29,7 @@ const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
     <div className="w-full">
       <div className="flex flex-row flex-wrap justify-center gap-6">
         {articles.map(article => (
-          <ArticleCard key={article.id} articleData={article as any} isFavorite={true} />
+          <ArticleCard key={article.id} articleData={article as any} userId={userId} isEditorAble={true} />
         ))}
       </div>
     </div>

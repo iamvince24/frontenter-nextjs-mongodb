@@ -14,7 +14,7 @@ interface SelfArticlePageProps {
 const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
   const authorId = currentUser.id
 
-  const { data: articles, isLoading, error, isError } = useAuthorArticles(authorId)
+  const { data: articles, isLoading, error, isError, refetch } = useAuthorArticles(authorId)
 
   if (isLoading) {
     return <LoadingSpinner text="載入文章中..." />
@@ -37,8 +37,12 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
               <ArticleCard
                 key={article.id}
                 articleData={article}
-                // isEditorAble={isEditorAble}
-                // isFavorite={favoriteArticles?.includes(article.id) || }
+                userId={currentUser.id}
+                isEditorAble={true}
+                onSuccess={async () => {
+                  await refetch()
+                  return
+                }}
               />
             )
           })}
