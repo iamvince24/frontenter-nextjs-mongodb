@@ -1,8 +1,8 @@
-import { getCurrentUser } from "@/actions/getCurrentUser";
-import ProfilePage from "@/features/profile/page/ProfilePage";
+import { getCurrentUser } from '@/actions/getCurrentUser'
+import ProfilePage from '@/features/profile/page/ProfilePage'
 
 export default async function Profile() {
-  const { currentUser, refetch } = await getCurrentUser();
+  const currentUser = await getCurrentUser()
 
-  return <ProfilePage currentUser={currentUser} />;
+  return <ProfilePage currentUser={currentUser} />
 }

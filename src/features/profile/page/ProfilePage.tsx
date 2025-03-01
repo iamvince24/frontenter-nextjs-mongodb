@@ -1,33 +1,33 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { CurrentUser } from "@/actions/getCurrentUser";
-import ProfileForm from "../components/ProfileForm";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { profileFormSchema, useUpdateProfile } from "../hooks/useUpdateProfile";
-import { useProfile } from "../hooks/useProfile";
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import { CurrentUser } from '@/actions/getCurrentUser'
+import ProfileForm from '../components/ProfileForm'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { profileFormSchema, useUpdateProfile } from '../hooks/useUpdateProfile'
+import { useProfile } from '../hooks/useProfile'
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 interface ProfilePageProps {
-  currentUser: CurrentUser | null;
+  currentUser: CurrentUser | null
 }
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 const ProfilePage = ({ currentUser }: ProfilePageProps) => {
-  const { profile, fetchError, refetch } = useProfile();
+  const { profile, refetch, isLoading } = useProfile()
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
-    username: profile?.username || "",
-    email: profile?.email || "",
-    bio: profile?.bio || "",
-  });
+    username: profile?.username || '',
+    email: profile?.email || '',
+    bio: profile?.bio || '',
+  })
 
-  const { mutateAsync: updateProfile, isPending } = useUpdateProfile();
+  const { mutateAsync: updateProfile, isPending } = useUpdateProfile()
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -35,28 +35,30 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
       username: formData.username,
       bio: formData.bio,
     },
-  });
+  })
+
+  if (isLoading) {
+    return <LoadingSpinner text="載入資料中..." />
+  }
 
   if (!profile?.id) {
-    return <p>Please sign in.</p>;
+    return <p>Please sign in.</p>
   }
 
   const handleEdit = () => {
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const handleSubmit = async (values: ProfileFormValues) => {
-    setIsLoading(true);
-    await updateProfile(values);
-    await refetch();
-    setFormData({ ...formData, ...values });
-    setIsLoading(false);
-    setIsEditing(false);
-  };
+    await updateProfile(values)
+    await refetch()
+    setFormData({ ...formData, ...values })
+    setIsEditing(false)
+  }
 
   const handleCancel = () => {
-    setIsEditing(false);
-  };
+    setIsEditing(false)
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -81,31 +83,23 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
           ) : (
             <div className="space-y-4">
               <div className="w-full">
-                <h3 className="text-base text-gray-700 font-bold">
-                  使用者名稱：
-                </h3>
+                <h3 className="text-base text-gray-700 font-bold">使用者名稱：</h3>
                 <p className="mt-1 text-gray-900">{profile?.username}</p>
               </div>
               <div className="w-full">
-                <h3 className="text-base text-gray-700 font-bold">
-                  電子郵件：
-                </h3>
+                <h3 className="text-base text-gray-700 font-bold">電子郵件：</h3>
                 <p className="mt-1 text-gray-900">{profile?.email}</p>
               </div>
               <div className="w-full">
-                <h3 className="text-base text-gray-700 font-bold">
-                  自我介紹：
-                </h3>
-                <p className="mt-1 text-gray-900">
-                  {profile?.bio || "尚未填寫"}
-                </p>
+                <h3 className="text-base text-gray-700 font-bold">自我介紹：</h3>
+                <p className="mt-1 text-gray-900">{profile?.bio || '尚未填寫'}</p>
               </div>
             </div>
           )}
         </CardContent>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default ProfilePage;
+export default ProfilePage

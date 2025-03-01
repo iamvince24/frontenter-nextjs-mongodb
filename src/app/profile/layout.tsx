@@ -21,7 +21,7 @@ export default function ProfileTab({
 
   return (
     <div>
-      <div className="flex justify-center my-5">
+      <div className="flex justify-center my-5 gap-3">
         {navItems.map(item => (
           <Link href={item.path} key={item.path}>
             <NavButton active={pathname === item.path}>{item.label}</NavButton>
