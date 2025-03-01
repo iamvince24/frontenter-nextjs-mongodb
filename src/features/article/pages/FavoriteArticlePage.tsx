@@ -1,99 +1,42 @@
-"use client";
+'use client'
 
-import { useQuery } from "@tanstack/react-query";
-import ArticleCard from "../../../components/article/ArticleCard";
-import { useSession } from "next-auth/react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FaExclamationTriangle } from "react-icons/fa";
-import { Card, CardContent, CardDescription } from "@/components/ui/card";
-import { Spinner } from "../../../components/ui/spinner";
-import { CurrentUser } from "@/actions/getCurrentUser";
-import { useFavoriteArticles } from "../../article/hooks/useFavoriteArticles";
+import ArticleCard from '../../../components/article/ArticleCard'
+import { CurrentUser } from '@/actions/getCurrentUser'
+import { useFavoriteArticles } from '../../article/hooks/useFavoriteArticles'
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import { ErrorAlert } from '@/components/error/ErrorAlert'
+import { EmptyState } from '@/components/feedback/EmptyState'
 
 const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
-  const userId = currentUser?.id as string;
+  const userId = currentUser?.id as string
 
-  const {
-    data: collections,
-    isLoading,
-    isError,
-    error,
-  } = useFavoriteArticles(userId);
+  const { data: collections, isLoading, isError, error } = useFavoriteArticles(userId)
 
-  const articles = collections?.map((collection) => collection.article) || [];
+  const articles = collections?.map(collection => collection.article) || []
 
-  const favoriteArticleIds =
-    collections?.map((collection) => collection.articleId) || [];
+  const favoriteArticleIds = collections?.map(collection => collection.articleId) || []
 
   if (isLoading) {
-    return (
-      <div className="w-full flex justify-center items-center py-20">
-        <div className="flex flex-col items-center gap-2">
-          <Spinner className="h-8 w-8" />
-          <p className="text-sm text-muted-foreground">載入收藏文章中...</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner text="載入文章中..." />
   }
 
   if (isError) {
-    return (
-      <div className="w-full py-10 px-4 max-w-3xl mx-auto">
-        <Alert variant="destructive">
-          <FaExclamationTriangle className="h-4 w-4" />
-          <AlertTitle>載入失敗</AlertTitle>
-          <AlertDescription>
-            無法載入收藏文章:{" "}
-            {error instanceof Error ? error.message : "未知錯誤"}
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
+    return <ErrorAlert error={error} />
   }
 
   if (articles.length === 0) {
-    return (
-      <div className="w-full py-20 flex justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6 text-center">
-            <div className="flex flex-col items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-muted-foreground"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                />
-              </svg>
-              <CardDescription className="text-base">
-                您尚未收藏任何文章
-              </CardDescription>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <EmptyState message="您尚未收藏任何文章" />
   }
 
   return (
     <div className="w-full">
       <div className="flex flex-row flex-wrap justify-center gap-6">
-        {articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            articleData={article as any}
-            isFavorite={true}
-          />
+        {articles.map(article => (
+          <ArticleCard key={article.id} articleData={article as any} isFavorite={true} />
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FavoriteArticlePage;
+export default FavoriteArticlePage
