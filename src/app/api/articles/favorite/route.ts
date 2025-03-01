@@ -13,15 +13,35 @@ export async function GET(req: Request) {
   }
 
   try {
-    // Get user's collections with article details
     const collections = await prisma.collection.findMany({
       where: { userId },
       include: {
-        article: true,
+        article: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                username: true,
+              },
+            },
+            tags: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     })
 
-    return NextResponse.json({ collections })
+    // Map the collections to return articles with isCollected flag
+    const articles = collections.map(collection => ({
+      ...collection.article,
+      isCollected: true,
+    }))
+
+    return NextResponse.json({ articles })
   } catch (error) {
     console.error('Error fetching collections:', error)
     return NextResponse.json({ error: 'Failed to fetch collections' }, { status: 500 })

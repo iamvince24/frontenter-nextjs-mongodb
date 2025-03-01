@@ -20,36 +20,28 @@ interface Article {
   authorId?: string
 }
 
-interface Collection {
-  id: string
-  createdAt: string
-  userId: string
-  articleId: string
-  article: Article
+interface ArticlesResponse {
+  articles: Article[]
 }
 
-interface CollectionsResponse {
-  collections: Collection[]
-}
-
-const fetchUserCollections = async (userId: string): Promise<Collection[]> => {
+const fetchUserFavoriteArticles = async (userId: string): Promise<Article[]> => {
   if (!userId) return []
 
   const response = await fetch(`/api/articles/favorite?userId=${userId}`)
   if (!response.ok) {
-    throw new Error('Failed to fetch collections')
+    throw new Error('Failed to fetch favorite articles')
   }
-  const data: CollectionsResponse = await response.json()
-  return data.collections
+  const data: ArticlesResponse = await response.json()
+  return data.articles
 }
 
 export const useFavoriteArticles = (userId: string) => {
   return useQuery({
-    queryKey: ['collections', userId],
-    queryFn: () => fetchUserCollections(userId),
+    queryKey: ['favoriteArticles', userId],
+    queryFn: () => fetchUserFavoriteArticles(userId),
     enabled: !!userId,
     staleTime: 1000 * 60 * 5,
   })
 }
 
-export type { Article, Collection }
+export type { Article }

@@ -10,8 +10,7 @@ import { EmptyState } from '@/components/feedback/EmptyState'
 const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
   const userId = currentUser?.id as string
 
-  const { data: collections, isLoading, isError, error } = useFavoriteArticles(userId)
-  const articles = collections?.map(collection => collection.article) || []
+  const { data: collections, isLoading, isError, error, refetch } = useFavoriteArticles(userId)
 
   if (isLoading) {
     return <LoadingSpinner text="載入文章中..." />
@@ -21,15 +20,24 @@ const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
     return <ErrorAlert error={error} />
   }
 
-  if (articles.length === 0) {
+  if (collections && collections.length === 0) {
     return <EmptyState message="您尚未收藏任何文章" />
   }
 
   return (
     <div className="w-full">
       <div className="flex flex-row flex-wrap justify-center gap-6">
-        {articles.map(article => (
-          <ArticleCard key={article.id} articleData={article as any} userId={userId} isEditorAble={false} />
+        {collections?.map(article => (
+          <ArticleCard
+            key={article.id}
+            articleData={article as any}
+            userId={userId}
+            isEditorAble={false}
+            onSuccess={async () => {
+              await refetch()
+              return
+            }}
+          />
         ))}
       </div>
     </div>
