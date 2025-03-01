@@ -1,55 +1,43 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { NavButton } from "@/components/ui/NavButton";
-import Link from "next/link";
-import { DialogDemo } from "@/components/dialog/DialogDemo";
-import SignUpForm from "../../../features/auth/components/SignUpForm";
-import LogInForm from "../../../features/auth/components/LogInForm";
-import { getCurrentUser } from "@/actions/getCurrentUser";
-import { usePathname } from "next/navigation";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { SessionProvider } from "next-auth/react";
+import React from 'react'
+import Image from 'next/image'
+import { NavButton } from '@/components/ui/NavButton'
+import Link from 'next/link'
+import { DialogDemo } from '@/components/dialog/DialogDemo'
+import SignUpForm from '../../../features/auth/components/SignUpForm'
+import LogInForm from '../../../features/auth/components/LogInForm'
+import { signOut } from 'next-auth/react'
 
 const links: { title: string; href: string; description: string }[] = [
   {
-    title: "文章",
-    href: "/article",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+    title: '文章',
+    href: '/article',
+    description: 'A modal dialog that interrupts the user with important content and expects a response.',
   },
-];
+]
 
 // TODO: Use other method to determine if the user is logged in
 function Navbar({ currentUsername }: { currentUsername?: string }) {
   return (
     <header className="w-full h-28 bg-gray-100 flex flex-row justify-between items-center pl-3 pr-4">
       <Link href="/">
-        <Image
-          width={403}
-          height={195}
-          src="/feLogo.png"
-          alt="feLogo"
-          className="w-36"
-        />
+        <Image width={403} height={195} src="/feLogo.png" alt="feLogo" className="w-36" />
       </Link>
       <div className="flex gap-x-0 sm:gap-x-4 md:gap-x-8">
-        {links?.map((link) => {
+        {links?.map(link => {
           return (
             <Link href={link.href} key={link.title}>
               <NavButton>{link.title}</NavButton>
             </Link>
-          );
+          )
         })}
         {currentUsername ? (
           <>
             <Link href="/profile">
               <NavButton>會員管理</NavButton>
             </Link>
-            <NavButton onClick={() => signOut({ callbackUrl: "/" })}>
-              登出
-            </NavButton>
+            <NavButton onClick={() => signOut({ callbackUrl: '/' })}>登出</NavButton>
           </>
         ) : (
           <>
@@ -63,7 +51,7 @@ function Navbar({ currentUsername }: { currentUsername?: string }) {
         )}
       </div>
     </header>
-  );
+  )
 }
 
-export default Navbar;
+export default Navbar
