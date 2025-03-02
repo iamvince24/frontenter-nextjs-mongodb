@@ -1,39 +1,42 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { signUpSchema, useRegister } from "../hooks/useRegister";
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { signUpSchema, useRegister } from '../hooks/useRegister'
 
-export default function SignUpForm() {
-  const { register, isPending, error } = useRegister();
+type SignUpFormProps = {
+  onDialogClose?: () => void
+}
+
+export default function SignUpForm({ onDialogClose }: SignUpFormProps) {
+  const { register, isPending, error } = useRegister()
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      username: "",
-      email: "",
-      password: "",
+      username: '',
+      email: '',
+      password: '',
     },
-  });
+  })
 
-  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
-    register(values);
-  };
+  const onSubmit = async (values: z.infer<typeof signUpSchema>) => {
+    try {
+      await register(values)
+      if (onDialogClose) {
+        onDialogClose()
+      }
+    } catch (error) {
+      console.error('註冊失敗:', error)
+    }
+  }
 
   return (
     <div>
@@ -42,10 +45,7 @@ export default function SignUpForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            className="space-y-4 flex flex-col items-center"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
+          <form className="space-y-4 flex flex-col items-center" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="username"
@@ -95,5 +95,5 @@ export default function SignUpForm() {
         </Form>
       </CardContent>
     </div>
-  );
+  )
 }

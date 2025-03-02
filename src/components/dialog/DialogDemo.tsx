@@ -1,30 +1,41 @@
-import React, { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { NavButton } from "../ui/NavButton";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React from 'react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { NavButton } from '../ui/NavButton'
 
-interface DialogDemoProps {
-  children: ReactNode;
-  name: string;
+type DialogDemoProps = {
+  name: string
+  children: React.ReactNode
+  onSuccess?: () => void
 }
 
-export function DialogDemo({ children, name }: DialogDemoProps) {
+export function DialogDemo({ name, children, onSuccess }: DialogDemoProps) {
+  const [open, setOpen] = React.useState(false)
+
+  const handleSuccess = () => {
+    setOpen(false)
+    if (onSuccess) {
+      onSuccess()
+    }
+  }
+
+  const childrenWithProps = React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { onDialogClose: handleSuccess } as any)
+    }
+    return child
+  })
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <NavButton>{name}</NavButton>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">{children}</DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{name}</DialogTitle>
+        </DialogHeader>
+        {childrenWithProps}
+      </DialogContent>
     </Dialog>
-  );
+  )
 }

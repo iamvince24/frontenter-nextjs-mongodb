@@ -1,13 +1,13 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { NavButton } from '@/components/ui/NavButton'
 import Link from 'next/link'
 import { DialogDemo } from '@/components/dialog/DialogDemo'
 import SignUpForm from '../../../features/auth/components/SignUpForm'
 import LogInForm from '../../../features/auth/components/LogInForm'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 
 const links: { title: string; href: string; description: string }[] = [
@@ -18,9 +18,18 @@ const links: { title: string; href: string; description: string }[] = [
   },
 ]
 
-// TODO: Use other method to determine if the user is logged in
-function Navbar({ currentUsername }: { currentUsername?: string }) {
+function Navbar({ currentUsername: initialUsername }: { currentUsername?: string }) {
   const pathname = usePathname()
+  const { data: session, status } = useSession()
+  const [username, setUsername] = useState<string | undefined>(initialUsername)
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      setUsername(session.user.name || initialUsername)
+    } else if (status === 'unauthenticated') {
+      setUsername(undefined)
+    }
+  }, [session, status, initialUsername])
 
   return (
     <header className="w-full h-28 bg-gray-100 flex flex-row justify-between items-center pl-3 pr-4">
@@ -35,7 +44,7 @@ function Navbar({ currentUsername }: { currentUsername?: string }) {
             </Link>
           )
         })}
-        {currentUsername ? (
+        {username ? (
           <>
             <Link href="/profile">
               <NavButton active={pathname.startsWith('/profile')}>會員管理</NavButton>

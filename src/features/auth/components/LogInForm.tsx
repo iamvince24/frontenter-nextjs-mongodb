@@ -1,38 +1,41 @@
-"use client";
+'use client'
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { loginSchema, useLogin } from "../hooks/useLogin";
+import * as React from 'react'
+import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { z } from 'zod'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { loginSchema, useLogin } from '../hooks/useLogin'
 
-export default function LogInForm() {
-  const { login, isPending, error } = useLogin();
+type LogInFormProps = {
+  onDialogClose?: () => void
+}
+
+export default function LogInForm({ onDialogClose }: LogInFormProps) {
+  const { login, isPending, error } = useLogin()
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
-  const onSubmit = (values: z.infer<typeof loginSchema>) => {
-    login(values);
-  };
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      await login(values)
+      if (onDialogClose) {
+        onDialogClose()
+      }
+    } catch (error) {
+      console.error('登入失敗:', error)
+    }
+  }
   return (
     <div>
       <CardHeader className="text-center">
@@ -40,10 +43,7 @@ export default function LogInForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            className="space-y-4 flex flex-col items-center"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
+          <form className="space-y-4 flex flex-col items-center" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="email"
@@ -80,5 +80,5 @@ export default function LogInForm() {
         </Form>
       </CardContent>
     </div>
-  );
+  )
 }
