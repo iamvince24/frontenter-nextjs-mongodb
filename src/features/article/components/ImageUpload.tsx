@@ -33,8 +33,8 @@ export const ImageUploader = ({
   }
 
   return (
-    <div>
-      <label htmlFor={fieldName}>Upload Image:</label>
+    <div className="flex flex-col gap-2">
+      <label htmlFor={fieldName}>封面圖片上傳:</label>
       <input
         id={fieldName}
         type="url"
@@ -50,7 +50,7 @@ export const ImageUploader = ({
         options={{ sources: ['local'], maxFiles: 1 }}
       >
         {({ open }) => (
-          <Button type="button" onClick={() => open?.()}>
+          <Button type="button" onClick={() => open?.()} className="w-fit">
             Upload Image
           </Button>
         )}
