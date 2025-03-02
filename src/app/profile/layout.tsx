@@ -20,6 +20,7 @@ export default function ProfileTab({
   ]
 
   const isInCreatePage = pathname === '/profile/article/create'
+  const isInEditPage = pathname.startsWith('/profile/article/edit')
 
   return (
     <div>
@@ -34,7 +35,7 @@ export default function ProfileTab({
           ))}
         </div>
 
-        {isInCreatePage ? (
+        {isInCreatePage || isInEditPage ? (
           <Link href="/profile/article/self" className="justify-self-end">
             <Button size="sm">取消</Button>
           </Link>

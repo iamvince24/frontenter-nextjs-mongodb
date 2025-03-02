@@ -2,6 +2,7 @@ import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import { ImageUploader } from './ImageUpload'
 import { Textarea } from '@/components/ui/textarea'
+import { usePathname } from 'next/navigation'
 
 interface ArticleFormProps {
   onSubmit: (data: any) => void
@@ -10,21 +11,30 @@ interface ArticleFormProps {
     content?: string
     image?: string
   }
+  initialData?: {
+    title?: string
+    content?: string
+    imageUrl?: string
+  }
 }
 
-export function ArticleForm({ onSubmit, defaultValues }: ArticleFormProps) {
+export function ArticleForm({ onSubmit, defaultValues, initialData }: ArticleFormProps) {
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: defaultValues || {
-      title: '',
-      content: '',
-      image: '',
-    },
+    defaultValues: initialData ||
+      defaultValues || {
+        title: '',
+        content: '',
+        image: '',
+      },
   })
+
+  const pathname = usePathname()
+  const isInEditPage = pathname.startsWith('/profile/article/edit')
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -41,7 +51,7 @@ export function ArticleForm({ onSubmit, defaultValues }: ArticleFormProps) {
         {errors.title && <p className="text-red-600">{errors.title.message}</p>}
       </div>
 
-      <ImageUploader register={register} setValue={setValue} />
+      <ImageUploader register={register} setValue={setValue} initialData={initialData?.imageUrl} />
 
       <div>
         <label htmlFor="content" className="block text-sm font-medium text-gray-700">
@@ -62,7 +72,7 @@ export function ArticleForm({ onSubmit, defaultValues }: ArticleFormProps) {
         }`}
         disabled={isSubmitting}
       >
-        Submit
+        {isInEditPage ? '儲存文章' : '新增文章'}
       </button>
     </form>
   )

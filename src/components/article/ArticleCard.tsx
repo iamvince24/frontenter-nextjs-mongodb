@@ -9,6 +9,7 @@ import { Button } from '../ui/button'
 import { Article } from '@/features/article/hooks/useFavoriteArticles'
 import { useFavorite } from '@/features/article/hooks/useFavorite'
 import { LoadingSpinner } from '../loading/LoadingSpinner'
+import Link from 'next/link'
 
 const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -29,11 +30,11 @@ export default function ArticleCard({
   isEditorAble?: boolean
   onSuccess?: () => Promise<void>
 }) {
-  const { id, authorId, classLocation, imageUrl, className, title, content, isCollected } = articleData
+  const { id: articleId, authorId, classLocation, imageUrl, className, title, content, isCollected } = articleData
 
   const { toggleFavorite, isLoading } = useFavorite({
     userId: userId || '',
-    articleId: id,
+    articleId,
     isCollected,
     onSuccess,
   })
@@ -76,7 +77,11 @@ export default function ArticleCard({
           </div>
           <IoIosArrowForward />
         </div>
-        {isEditorAble && <Button>編輯</Button>}
+        {isEditorAble && (
+          <Button variant="outline" size="sm" asChild onClick={e => e.stopPropagation()}>
+            <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
+          </Button>
+        )}
       </div>
     </ArticleCardStyle>
   )

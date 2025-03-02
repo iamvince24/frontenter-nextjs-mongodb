@@ -1,17 +1,29 @@
 'use client'
 
 import { z } from 'zod'
-import { useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { ArticleSchema } from '@/types/article'
 import { ArticleForm } from '../components/ArticleFormPage'
 import { useCreateArticle } from '../hooks/useCreateArticle'
+import { useArticle, useUpdateArticle } from '../hooks/useArticle'
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import { ErrorAlert } from '@/components/error/ErrorAlert'
 
 type ArticleFormInputs = z.infer<typeof ArticleSchema>
 
 export default function ArticleFormPage({ authorId }: { authorId: string | undefined }) {
   const router = useRouter()
+  const pathname = usePathname()
+  const isInEditPage = pathname.startsWith('/profile/article/edit')
+
+  const params = useParams()
+  const articleId = params.articleId as string
+
+  const { data: article, isLoading, isError, error } = useArticle(articleId)
 
   const createArticleMutation = useCreateArticle()
+
+  const updateArticleMutation = useUpdateArticle(articleId)
 
   const onSubmit = async (data: ArticleFormInputs) => {
     try {
@@ -19,7 +31,21 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
         throw new Error('請上傳圖片')
       }
 
-      await createArticleMutation.mutateAsync(data)
+      if (isInEditPage) {
+        await updateArticleMutation.mutateAsync({
+          title: data.title,
+          content: data.content,
+          imageUrl: data.imageUrl,
+        })
+      } else {
+        await createArticleMutation.mutateAsync(data)
+      }
+
+      await updateArticleMutation.mutateAsync({
+        title: data.title,
+        content: data.content,
+        imageUrl: data.imageUrl,
+      })
 
       router.push(`/profile/article/self`)
     } catch (error) {
@@ -32,11 +58,19 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
     return <p>Please sign in to create an article.</p>
   }
 
+  if (isLoading) {
+    return <LoadingSpinner />
+  }
+
+  if (isError) {
+    return <ErrorAlert error={error} />
+  }
+
   return (
     <div className="space-y-6 p-6">
-      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">新增文章</h3>
+      <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">{isInEditPage ? '編輯文章' : '新增文章'}</h3>
 
-      <ArticleForm onSubmit={onSubmit} />
+      <ArticleForm onSubmit={onSubmit} initialData={article} />
     </div>
   )
 }

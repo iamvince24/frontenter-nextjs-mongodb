@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { CldUploadWidget, CldUploadWidgetProps } from 'next-cloudinary'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ interface ImageUploaderProps {
   setValue: UseFormSetValue<any>
   fieldName?: string
   uploadPreset?: string
+  initialData?: string
 }
 
 export const ImageUploader = ({
@@ -18,10 +19,30 @@ export const ImageUploader = ({
   setValue,
   fieldName = 'imageUrl',
   uploadPreset = 'qlq9mpxc',
+  initialData,
 }: ImageUploaderProps) => {
-  const [imageUrl, setImageUrl] = useState<string>('')
+  const [imageUrl, setImageUrl] = useState<string>(initialData || '')
   const [imageWidth, setImageWidth] = useState<number>(0)
   const [imageHeight, setImageHeight] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState<boolean>(!!initialData)
+
+  useEffect(() => {
+    if (initialData) {
+      setValue(fieldName, initialData)
+
+      const img = new window.Image()
+      img.onload = () => {
+        setImageWidth(img.width)
+        setImageHeight(img.height)
+        setIsLoading(false)
+      }
+      img.onerror = () => {
+        console.error('Failed to load initial image')
+        setIsLoading(false)
+      }
+      img.src = initialData
+    }
+  }, [initialData, setValue, fieldName])
 
   const handleUpload: CldUploadWidgetProps['onSuccess'] = (result: any) => {
     if (result.event === 'success') {
@@ -51,13 +72,24 @@ export const ImageUploader = ({
       >
         {({ open }) => (
           <Button type="button" onClick={() => open?.()} className="w-fit">
-            Upload Image
+            上傳
           </Button>
         )}
       </CldUploadWidget>
       {imageUrl && (
-        <div>
-          <Image src={imageUrl} alt="Uploaded Image" width={imageWidth} height={imageHeight} />
+        <div className="mt-2">
+          {isLoading ? (
+            <div className="animate-pulse bg-gray-200 h-48 w-full rounded-md"></div>
+          ) : (
+            <Image
+              src={imageUrl}
+              alt="Uploaded Image"
+              width={imageWidth || 300}
+              height={imageHeight || 200}
+              className="max-w-full h-auto rounded-md"
+              priority={!!initialData}
+            />
+          )}
         </div>
       )}
     </div>
