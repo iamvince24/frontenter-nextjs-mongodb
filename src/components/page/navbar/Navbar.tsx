@@ -8,6 +8,7 @@ import { DialogDemo } from '@/components/dialog/DialogDemo'
 import SignUpForm from '../../../features/auth/components/SignUpForm'
 import LogInForm from '../../../features/auth/components/LogInForm'
 import { signOut } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
 
 const links: { title: string; href: string; description: string }[] = [
   {
@@ -19,6 +20,8 @@ const links: { title: string; href: string; description: string }[] = [
 
 // TODO: Use other method to determine if the user is logged in
 function Navbar({ currentUsername }: { currentUsername?: string }) {
+  const pathname = usePathname()
+
   return (
     <header className="w-full h-28 bg-gray-100 flex flex-row justify-between items-center pl-3 pr-4">
       <Link href="/">
@@ -28,15 +31,16 @@ function Navbar({ currentUsername }: { currentUsername?: string }) {
         {links?.map(link => {
           return (
             <Link href={link.href} key={link.title}>
-              <NavButton>{link.title}</NavButton>
+              <NavButton active={pathname.startsWith(link.href)}>{link.title}</NavButton>
             </Link>
           )
         })}
         {currentUsername ? (
           <>
             <Link href="/profile">
-              <NavButton>會員管理</NavButton>
+              <NavButton active={pathname.startsWith('/profile')}>會員管理</NavButton>
             </Link>
+
             <NavButton onClick={() => signOut({ callbackUrl: '/' })}>登出</NavButton>
           </>
         ) : (

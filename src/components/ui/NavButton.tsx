@@ -23,7 +23,7 @@ const buttonVariants = cva(
         icon: 'h-10 w-10',
       },
       active: {
-        true: 'bg-accent text-accent-foreground',
+        true: 'bg-gray-200 text-accent-foreground',
         false: '',
       },
     },

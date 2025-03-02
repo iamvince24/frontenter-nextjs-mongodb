@@ -41,12 +41,6 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
         await createArticleMutation.mutateAsync(data)
       }
 
-      await updateArticleMutation.mutateAsync({
-        title: data.title,
-        content: data.content,
-        imageUrl: data.imageUrl,
-      })
-
       router.push(`/profile/article/self`)
     } catch (error) {
       console.error('Failed to create article:', error)
