@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prismadb'
 import { getCurrentUser } from '@/actions/getCurrentUser'
-import { ArticleSchema } from '@/features/article/pages/ArticleFormPage'
+import { ArticleSchema } from '@/types/article'
 
 export async function POST(req: NextRequest) {
   const currentUser = await getCurrentUser()
@@ -24,13 +24,17 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         content,
-        authorId: currentUser?.id,
+        authorId: currentUser.id,
         imageUrl,
       },
     })
 
     return NextResponse.json(article, { status: 201 })
   } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error('Error creating article:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) },
+      { status: 500 },
+    )
   }
 }

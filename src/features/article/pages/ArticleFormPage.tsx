@@ -2,24 +2,19 @@
 
 import { useState } from 'react'
 import { z } from 'zod'
-import Image from 'next/image'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { CldUploadWidget, CldUploadWidgetProps } from 'next-cloudinary'
-import { Button } from '../../../components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import router from 'next/router'
-
-export const ArticleSchema = z.object({
-  title: z.string().min(1, '標題是必填項'),
-  content: z.string().min(1, '內容是必填項'),
-  imageUrl: z.string().url(),
-})
+import { useRouter } from 'next/navigation'
+import { ImageUploader } from '../components/ImageUpload'
+import { ArticleSchema } from '@/types/article'
 
 type ArticleFormInputs = z.infer<typeof ArticleSchema>
 
 export default function ArticleFormPage({ authorId }: { authorId: string | undefined }) {
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -31,14 +26,15 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [imageUrl, setImageUrl] = useState<string>('')
-  const [imageWidth, setImageWidth] = useState<number>(0)
-  const [imageHeight, setImageHeight] = useState<number>(0)
 
   const onSubmit = async (data: ArticleFormInputs) => {
     setIsSubmitting(true)
 
     try {
+      if (!data.imageUrl) {
+        throw new Error('請上傳圖片')
+      }
+
       const response = await fetch('/api/article', {
         method: 'POST',
         headers: {
@@ -47,15 +43,17 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
         body: JSON.stringify(data),
       })
 
+      const responseData = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to create article')
+        throw new Error(responseData.error || responseData.message || 'Failed to create article')
       }
 
       router.push(`/profile/article/self`)
-      setImageUrl('')
       reset()
     } catch (error) {
-      console.error(error)
+      console.error('Error submitting form:', error)
+      alert(error instanceof Error ? error.message : '提交失敗，請稍後再試')
     } finally {
       setIsSubmitting(false)
     }
@@ -65,45 +63,9 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
     return <p>Please sign in to create an article.</p>
   }
 
-  const handleUpload: CldUploadWidgetProps['onSuccess'] = (result: any) => {
-    if (result.event === 'success') {
-      setImageUrl(result.info.secure_url)
-      setValue('imageUrl', result.info.secure_url)
-      setImageWidth(result.info.width)
-      setImageHeight(result.info.height)
-    }
-  }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
-      <div>
-        <label htmlFor="imageUrl">Upload Image:</label>
-        <input
-          id="imageUrl"
-          type="url"
-          {...register('imageUrl')}
-          value={imageUrl}
-          onChange={e => setImageUrl(e.target.value)}
-          hidden
-        />
-        <CldUploadWidget
-          uploadPreset="qlq9mpxc"
-          onSuccess={handleUpload}
-          // onFailure={(error) => console.error("Upload failed", error)}
-          options={{ sources: ['local'], maxFiles: 1 }}
-        >
-          {({ open }) => (
-            <Button type="button" onClick={() => open?.()}>
-              Upload Image
-            </Button>
-          )}
-        </CldUploadWidget>
-        {imageUrl && (
-          <div>
-            <Image src={imageUrl} alt="Uploaded Image" width={imageWidth} height={imageHeight} />
-          </div>
-        )}
-      </div>
+      <ImageUploader register={register} setValue={setValue} />
 
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
