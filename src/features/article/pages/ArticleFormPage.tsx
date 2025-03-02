@@ -4,11 +4,14 @@ import { z } from 'zod'
 import { useRouter } from 'next/navigation'
 import { ArticleSchema } from '@/types/article'
 import { ArticleForm } from '../components/ArticleFormPage'
+import { useCreateArticle } from '../hooks/useCreateArticle'
 
 type ArticleFormInputs = z.infer<typeof ArticleSchema>
 
 export default function ArticleFormPage({ authorId }: { authorId: string | undefined }) {
   const router = useRouter()
+
+  const createArticleMutation = useCreateArticle()
 
   const onSubmit = async (data: ArticleFormInputs) => {
     try {
@@ -16,23 +19,11 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
         throw new Error('請上傳圖片')
       }
 
-      const response = await fetch('/api/article', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      const responseData = await response.json()
-
-      if (!response.ok) {
-        throw new Error(responseData.error || responseData.message || 'Failed to create article')
-      }
+      await createArticleMutation.mutateAsync(data)
 
       router.push(`/profile/article/self`)
     } catch (error) {
-      console.error('Error submitting form:', error)
+      console.error('Failed to create article:', error)
       alert(error instanceof Error ? error.message : '提交失敗，請稍後再試')
     }
   }
