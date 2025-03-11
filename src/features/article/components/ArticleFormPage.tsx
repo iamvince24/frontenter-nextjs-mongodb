@@ -3,6 +3,9 @@ import { useForm } from 'react-hook-form'
 import { ImageUploader } from './ImageUpload'
 import { Textarea } from '@/components/ui/textarea'
 import { usePathname } from 'next/navigation'
+import Tiptap from '@/components/Tiptap/Tiptap'
+import { useState } from 'react'
+import TiptapEditor from '@/components/Tiptap/Tiptap'
 
 interface ArticleFormProps {
   onSubmit: (data: any) => void
@@ -19,6 +22,8 @@ interface ArticleFormProps {
 }
 
 export function ArticleForm({ onSubmit, defaultValues, initialData }: ArticleFormProps) {
+  const [editorContent, setEditorContent] = useState(initialData?.content || defaultValues?.content || '')
+
   const {
     register,
     handleSubmit,
@@ -36,8 +41,16 @@ export function ArticleForm({ onSubmit, defaultValues, initialData }: ArticleFor
   const pathname = usePathname()
   const isInEditPage = pathname.startsWith('/profile/article/edit')
 
+  const handleFormSubmit = (data: any) => {
+    const formData = {
+      ...data,
+      content: editorContent,
+    }
+    onSubmit(formData)
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-gray-700">
           標題
@@ -57,11 +70,9 @@ export function ArticleForm({ onSubmit, defaultValues, initialData }: ArticleFor
         <label htmlFor="content" className="block text-sm font-medium text-gray-700">
           內容
         </label>
-        <Textarea
-          id="content"
-          {...register('content')}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
+
+        <TiptapEditor content={editorContent} onChange={setEditorContent} className="mt-1" />
+
         {errors.content && <p className="text-red-600">{errors.content.message}</p>}
       </div>
 
