@@ -9,11 +9,13 @@ import {
   Italic,
   Heading1,
   Heading2,
+  Heading3,
   List,
   ListOrdered,
   MinusSquare,
   Image as ImageIcon,
   Upload,
+  Strikethrough,
 } from 'lucide-react'
 
 interface TiptapEditorProps {
@@ -65,7 +67,6 @@ const TiptapEditor = ({ content, onChange, className }: TiptapEditorProps) => {
       }
     }
 
-    // 工具按鈕元件
     const ToolButton = ({
       onClick,
       isActive = false,
@@ -104,6 +105,27 @@ const TiptapEditor = ({ content, onChange, className }: TiptapEditorProps) => {
     return (
       <div className="flex flex-wrap items-center gap-1 p-1 border-b">
         <ToolButton
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          isActive={editor.isActive('heading', { level: 1 })}
+          icon={<Heading1 className="h-4 w-4" />}
+          tooltip="標題 1"
+        />
+
+        <ToolButton
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          isActive={editor.isActive('heading', { level: 2 })}
+          icon={<Heading2 className="h-4 w-4" />}
+          tooltip="標題 2"
+        />
+
+        <ToolButton
+          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+          isActive={editor.isActive('heading', { level: 3 })}
+          icon={<Heading3 className="h-4 w-4" />}
+          tooltip="標題 3"
+        />
+
+        <ToolButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           isActive={editor.isActive('bold')}
           icon={<Bold className="h-4 w-4" />}
@@ -118,17 +140,10 @@ const TiptapEditor = ({ content, onChange, className }: TiptapEditorProps) => {
         />
 
         <ToolButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          isActive={editor.isActive('heading', { level: 1 })}
-          icon={<Heading1 className="h-4 w-4" />}
-          tooltip="標題 1"
-        />
-
-        <ToolButton
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          isActive={editor.isActive('heading', { level: 2 })}
-          icon={<Heading2 className="h-4 w-4" />}
-          tooltip="標題 2"
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+          isActive={editor.isActive('strike')}
+          icon={<Strikethrough className="h-4 w-4" />}
+          tooltip="刪除線"
         />
 
         <div className="mx-1 h-6 w-px bg-gray-200" />

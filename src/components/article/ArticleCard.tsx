@@ -70,7 +70,7 @@ export default function ArticleCard({
           )}
         </div>
         <p className="inline m-0 whitespace-nowrap tracking-[1.5px]">{title}</p>
-        <div className="h-[70px] px-[15px] py-0 leading-[24px] tracking-[1px]">{content}</div>
+        {/* <div className="h-[70px] px-[15px] py-0 leading-[24px] tracking-[1px]">{content}</div> */}
         <div className="w-full flex justify-center items-center my-[5px] mb-[50px] px-[20px] py-0">
           <div className="mr-[5px] transition-transform duration-[600ms] ease-linear hover:-translate-x-[15px]">
             read more

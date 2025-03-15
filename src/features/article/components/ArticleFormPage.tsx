@@ -1,9 +1,7 @@
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import { ImageUploader } from './ImageUpload'
-import { Textarea } from '@/components/ui/textarea'
 import { usePathname } from 'next/navigation'
-import Tiptap from '@/components/Tiptap/Tiptap'
 import { useState } from 'react'
 import TiptapEditor from '@/components/Tiptap/Tiptap'
 
