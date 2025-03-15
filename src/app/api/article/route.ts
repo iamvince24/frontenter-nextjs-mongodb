@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ errors: result.error.flatten() }, { status: 400 })
     }
 
-    const { title, content, imageUrl } = result.data
+    const { title, content, imageUrl, isPublic } = result.data
 
     const article = await prisma.article.create({
       data: {
@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
         content,
         authorId: currentUser.id,
         imageUrl,
+        isPublic,
       },
     })
 

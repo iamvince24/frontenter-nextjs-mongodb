@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest, { params }: { params: { articleId: s
     }
 
     const body = await req.json()
-    const { title, content, imageUrl } = body
+    const { title, content, imageUrl, isPublic } = body
 
     const existingArticle = await prisma.article.findUnique({
       where: { id: articleId },
@@ -62,6 +62,7 @@ export async function PUT(req: NextRequest, { params }: { params: { articleId: s
         ...(title !== undefined && { title }),
         ...(content !== undefined && { content }),
         ...(imageUrl !== imageUrl && { imageUrl }),
+        ...(isPublic !== undefined && { isPublic }),
         updatedAt: new Date(),
       },
     })

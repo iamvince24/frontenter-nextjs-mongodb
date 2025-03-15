@@ -4,6 +4,7 @@ interface ArticleData {
   title: string
   content: string
   imageUrl: string
+  isPublic: boolean
 }
 
 interface CreateArticleResponse {
@@ -13,6 +14,7 @@ interface CreateArticleResponse {
     title: string
     content: string
     imageUrl: string
+    isPublic: boolean
   }
   error?: string
 }

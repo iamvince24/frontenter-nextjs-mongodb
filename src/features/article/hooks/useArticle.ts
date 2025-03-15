@@ -34,6 +34,7 @@ export interface UpdateArticleData {
   title?: string
   content?: string
   imageUrl?: string
+  isPublic?: boolean
 }
 
 export const updateArticle = async (articleId: string, data: UpdateArticleData) => {

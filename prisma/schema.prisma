@@ -31,9 +31,10 @@ model Article {
   updatedAt       DateTime  @updatedAt
   content         String
   imageUrl        String?
-tags             Tag[]       @relation(fields: [tagIds], references: [id])
-  tagIds      String[]    @db.ObjectId
-  collections Collection[]
+  tags            Tag[]       @relation(fields: [tagIds], references: [id])
+  tagIds          String[]    @db.ObjectId
+  collections     Collection[]
+  isPublic        Boolean   @default(true)
 }
 
 model Tag {

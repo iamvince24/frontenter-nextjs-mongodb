@@ -36,6 +36,7 @@ export default function ArticleFormPage({ authorId }: { authorId: string | undef
           title: data.title,
           content: data.content,
           imageUrl: data.imageUrl,
+          isPublic: data.isPublic,
         })
       } else {
         await createArticleMutation.mutateAsync(data)
