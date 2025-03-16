@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { useEffect } from 'react'
+import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 
 const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
   const userId = currentUser?.id as string
@@ -30,22 +31,20 @@ const FavoriteArticlePage = ({ currentUser }: { currentUser: CurrentUser }) => {
   }
 
   return (
-    <div className="w-full">
-      <div className="flex flex-row flex-wrap justify-center gap-6">
-        {collections?.map(article => (
-          <ArticleCard
-            key={article.id}
-            articleData={article as any}
-            userId={userId}
-            isEditorAble={false}
-            onSuccess={async () => {
-              await refetch()
-              return
-            }}
-          />
-        ))}
-      </div>
-    </div>
+    <ArticlesGridLayout>
+      {collections?.map(article => (
+        <ArticleCard
+          key={article.id}
+          articleData={article as any}
+          userId={userId}
+          isEditorAble={false}
+          onSuccess={async () => {
+            await refetch()
+            return
+          }}
+        />
+      ))}
+    </ArticlesGridLayout>
   )
 }
 

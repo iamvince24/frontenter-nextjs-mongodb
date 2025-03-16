@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { useEffect } from 'react'
+import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 
 interface SelfArticlePageProps {
   currentUser: CurrentUser
@@ -34,25 +35,23 @@ const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
   }
 
   return (
-    <div className="w-full">
-      <div className="flex flex-row flex-wrap justify-center gap-6">
-        {articles &&
-          articles.map(article => {
-            return (
-              <ArticleCard
-                key={article.id}
-                articleData={article}
-                userId={currentUser.id}
-                isEditorAble={true}
-                onSuccess={async () => {
-                  await refetch()
-                  return
-                }}
-              />
-            )
-          })}
-      </div>
-    </div>
+    <ArticlesGridLayout>
+      {articles &&
+        articles.map(article => {
+          return (
+            <ArticleCard
+              key={article.id}
+              articleData={article}
+              userId={currentUser.id}
+              isEditorAble={true}
+              onSuccess={async () => {
+                await refetch()
+                return
+              }}
+            />
+          )
+        })}
+    </ArticlesGridLayout>
   )
 }
 

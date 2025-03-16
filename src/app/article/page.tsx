@@ -1,6 +1,7 @@
 'use client'
 
 import ArticleCard from '@/components/article/ArticleCard'
+import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
@@ -24,21 +25,19 @@ export default function ArticlePage() {
   }
 
   return (
-    <div className="w-full">
-      <div className="flex flex-row flex-wrap justify-center gap-6">
-        {articles?.map(article => (
-          <ArticleCard
-            key={article.id}
-            articleData={article as any}
-            userId={session?.user?.id as string}
-            isEditorAble={false}
-            onSuccess={async () => {
-              await refetch()
-              return
-            }}
-          />
-        ))}
-      </div>
-    </div>
+    <ArticlesGridLayout>
+      {articles?.map(article => (
+        <ArticleCard
+          key={article.id}
+          articleData={article as any}
+          userId={session?.user?.id as string}
+          isEditorAble={false}
+          onSuccess={async () => {
+            await refetch()
+            return
+          }}
+        />
+      ))}
+    </ArticlesGridLayout>
   )
 }
