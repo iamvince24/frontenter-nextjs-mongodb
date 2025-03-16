@@ -5,6 +5,15 @@ import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 import { useAllPublicArticles } from '@/features/article/hooks/useArticles'
 import { useSession } from 'next-auth/react'
 
@@ -25,19 +34,40 @@ export default function ArticlePage() {
   }
 
   return (
-    <ArticlesGridLayout>
-      {articles?.map(article => (
-        <ArticleCard
-          key={article.id}
-          articleData={article as any}
-          userId={session?.user?.id as string}
-          isEditorAble={false}
-          onSuccess={async () => {
-            await refetch()
-            return
-          }}
-        />
-      ))}
-    </ArticlesGridLayout>
+    <div>
+      <ArticlesGridLayout>
+        {articles?.map(article => (
+          <ArticleCard
+            key={article.id}
+            articleData={article as any}
+            userId={session?.user?.id as string}
+            isEditorAble={false}
+            onSuccess={async () => {
+              await refetch()
+              return
+            }}
+          />
+        ))}
+      </ArticlesGridLayout>
+
+      <Pagination className="mt-10">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" className="text-lg" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" className="text-lg">
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" className="text-lg" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </div>
   )
 }
