@@ -11,11 +11,13 @@ import { useFavorite } from '@/features/article/hooks/useFavorite'
 import { LoadingSpinner } from '../loading/LoadingSpinner'
 import Link from 'next/link'
 
-const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
+const ArticleCardStyle = ({ children, articleId }: { children: React.ReactNode; articleId?: string }) => {
   return (
-    <div className="w-[330px] h-[430px] m-2.5 p-3 text-[var(--text-size-h3)] border border-[var(--primary-color)] rounded-md flex flex-col items-center justify-between">
-      {children}
-    </div>
+    <Link href={`/article/${articleId}`}>
+      <div className="w-[330px] h-[430px] m-2.5 p-3 text-[var(--text-size-h3)] border border-[var(--primary-color)] rounded-md flex flex-col items-center justify-between">
+        {children}
+      </div>
+    </Link>
   )
 }
 
@@ -30,7 +32,7 @@ export default function ArticleCard({
   isEditorAble?: boolean
   onSuccess?: () => Promise<void>
 }) {
-  const { id: articleId, authorId, classLocation, imageUrl, className, title, content, isCollected } = articleData
+  const { id: articleId, authorId, classLocation, imageUrl, className, title, isCollected } = articleData
 
   const { toggleFavorite, isLoading } = useFavorite({
     userId: userId || '',
@@ -48,7 +50,7 @@ export default function ArticleCard({
   }
 
   return (
-    <ArticleCardStyle>
+    <ArticleCardStyle articleId={articleId}>
       <div className="w-full flex flex-row justify-between items-center my-[30px] mt-0 mb-[20px]">
         <div></div>
         <div className="flex flex-row">
@@ -70,7 +72,6 @@ export default function ArticleCard({
           )}
         </div>
         <p className="inline m-0 whitespace-nowrap tracking-[1.5px]">{title}</p>
-        {/* <div className="h-[70px] px-[15px] py-0 leading-[24px] tracking-[1px]">{content}</div> */}
         <div className="w-full flex justify-center items-center my-[5px] mb-[50px] px-[20px] py-0">
           <div className="mr-[5px] transition-transform duration-[600ms] ease-linear hover:-translate-x-[15px]">
             read more
