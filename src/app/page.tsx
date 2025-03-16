@@ -1,11 +1,12 @@
-import { IoIosArrowDown } from "react-icons/io";
-import { Button } from "@/components/ui/button";
-import { LuPencilRuler } from "react-icons/lu";
-import { RxDividerHorizontal } from "react-icons/rx";
-import { getCurrentUser } from "@/actions/getCurrentUser";
+import { IoIosArrowDown } from 'react-icons/io'
+import { Button } from '@/components/ui/button'
+import { LuPencilRuler } from 'react-icons/lu'
+import { RxDividerHorizontal } from 'react-icons/rx'
+import { getCurrentUser } from '@/actions/getCurrentUser'
+import Link from 'next/link'
 
 export default async function HomePage() {
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser()
 
   return (
     <>
@@ -21,11 +22,10 @@ export default async function HomePage() {
           <IoIosArrowDown className="w-8 h-8 animate-bounce text-white" />
         </section>
 
-        <section
+        {/* <section
           className="w-full h-[325px] bg-cover bg-no-repeat bg-center-bottom bg-local bg-gradient-to-t from-[rgba(0,0,0,0.4)] via-[rgba(0,0,0,0.4)] text-white flex flex-col gap-8 justify-center items-center md:h-[650px]"
           style={{
-            backgroundImage:
-              "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/testSectionImg.jpg')",
+            backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/testSectionImg.jpg')",
           }}
         >
           <p className="text-lg text-center leading-7 tracking-wider md:text-xl sm:leading-8">
@@ -34,30 +34,36 @@ export default async function HomePage() {
             可以點擊按鈕測測看哦！
           </p>
           <Button variant="secondary">測試 GO</Button>
-        </section>
+        </section> */}
 
         <section className="w-full h-[650px] bg-[linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('/articleImg.jpg')] bg-no-repeat bg-cover bg-bottom bg-fixed text-white text-2xl flex flex-col justify-center items-center gap-[30px]">
           <p>教室精選</p>
-          <Button variant="secondary" className="w-40">
-            AppWorks School
-          </Button>
-          <Button variant="secondary" className="w-40">
-            彭彭的課程教學
-          </Button>
-          <Button variant="secondary" className="w-40">
-            五倍紅寶石
-          </Button>
+          <Link href="/article/67d68cca3732e1923c62b920">
+            <Button variant="secondary" className="w-40">
+              AppWorks School
+            </Button>
+          </Link>
+
+          <Link href="/article/67d6c4e03732e1923c62b922">
+            <Button variant="secondary" className="w-40">
+              彭彭的課程教學
+            </Button>
+          </Link>
+
+          <Link href="/article/67d6c50b3732e1923c62b924">
+            <Button variant="secondary" className="w-40">
+              五倍紅寶石
+            </Button>
+          </Link>
         </section>
 
-        <section className="w-full h-fit bg-[url('/informationImg.jpg')] bg-no-repeat bg-cover bg-bottom bg-fixed flex flex-col justify-center items-center md:h-[650px] md:flex-row">
+        {/* <section className="w-full h-fit bg-[url('/informationImg.jpg')] bg-no-repeat bg-cover bg-bottom bg-fixed flex flex-col justify-center items-center md:h-[650px] md:flex-row">
           <div className="w-[210px] h-[280px] bg-[url('/efWhitePaper.png')] bg-no-repeat bg-cover m-[5px] p-[30px_0px_30px] flex flex-col justify-between items-center md:w-[330px] md:h-[440px] md:m-[30px] md:p-[60px_0px_80px]">
             <div className="flex flex-col items-center">
               <LuPencilRuler className="w-6 h-6 text-primary " />
               <p className="text-lg sm:text-2xl">探索</p>
               <RxDividerHorizontal className="w-12 h-12" />
-              <p className="w-3/4">
-                我們提供公正的資訊， 幫您順利轉職， 並追蹤最新的業界動態。
-              </p>
+              <p className="w-3/4">我們提供公正的資訊， 幫您順利轉職， 並追蹤最新的業界動態。</p>
             </div>
             <Button className="w-20">找學校</Button>
           </div>
@@ -66,13 +72,11 @@ export default async function HomePage() {
               <LuPencilRuler className="w-6 h-6 text-primary " />
               <p className="text-lg sm:text-2xl">技能樹</p>
               <RxDividerHorizontal className="w-12 h-12" />
-              <p className="w-3/4">
-                前端包含哪些技術？ 你又學會了哪些？ 趕緊點進來試試看。
-              </p>
+              <p className="w-3/4">前端包含哪些技術？ 你又學會了哪些？ 趕緊點進來試試看。</p>
             </div>
             <Button className="w-20">技能樹</Button>
           </div>
-        </section>
+        </section> */}
 
         <section className="w-full h-[365px] bg-[linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)),url('/aboutSectionImg.jpg')] bg-cover bg-no-repeat bg-bottom flex flex-col justify-end items-center sm:h-[730px]">
           <p className="text-lg sm:text-2xl">關於</p>
@@ -88,5 +92,5 @@ export default async function HomePage() {
         </section>
       </main>
     </>
-  );
+  )
 }
