@@ -14,7 +14,7 @@ export interface CurrentUser {
   createdAt: Date
   updatedAt: Date
   bio: string | null
-  profileImage: string | null
+  // profileImage: string | null
 }
 
 export async function getCurrentUser(refetch: boolean = false): Promise<{
@@ -25,7 +25,7 @@ export async function getCurrentUser(refetch: boolean = false): Promise<{
   createdAt: Date
   updatedAt: Date
   bio: string | null
-  profileImage: string | null
+  // profileImage: string | null
 } | null> {
   try {
     const session = await getSession()
@@ -45,7 +45,7 @@ export async function getCurrentUser(refetch: boolean = false): Promise<{
           createdAt: true,
           updatedAt: true,
           bio: true,
-          profileImage: true,
+          // profileImage: true,
           articles: true,
           collections: true,
         },

@@ -5,10 +5,14 @@ const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest) {
   try {
-    const articles = await prisma.article.findMany()
+    const articles = await prisma.article.findMany({
+      where: {
+        isPublic: true,
+      },
+    })
 
     if (!articles || articles.length === 0) {
-      return NextResponse.json({ error: 'No articles found for this author' }, { status: 404 })
+      return NextResponse.json({ error: 'No public articles found' }, { status: 404 })
     }
 
     return NextResponse.json(articles)

@@ -26,7 +26,7 @@ export default function ArticleCard({
   onSuccess,
 }: {
   articleData: Article
-  userId: string
+  userId?: string
   isEditorAble?: boolean
   onSuccess?: () => Promise<void>
 }) {
@@ -55,7 +55,7 @@ export default function ArticleCard({
           <FaLocationDot color="lightgreen" className="w-6 h-6 mx-5" />
           <div>{classLocation}</div>
         </div>
-        <div>{authorId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}</div>
+        <div>{userId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}</div>
       </div>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
         <div className="w-[250px] h-[150px] overflow-hidden ">
