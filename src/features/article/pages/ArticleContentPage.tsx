@@ -2,7 +2,9 @@
 
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { Article } from '../hooks/useArticles'
-
+import Image from 'next/image'
+import { ArticleContent } from '../components/ArticleContent'
+import dayjs from 'dayjs'
 interface ArticleContentPageProps {
   article: Article | null
 }
@@ -12,5 +14,23 @@ export default function ArticleContentPage({ article }: ArticleContentPageProps)
     return <EmptyState message="文章不存在" />
   }
 
-  return <div>{article.title}</div>
+  const { title, imageUrl, author, content, updatedAt } = article
+
+  return (
+    <div className="flex flex-col gap-4 items-center px-60">
+      <div className="flex flex-col gap-4 items-start mt-16">
+        <h1 className="text-[40px] font-bold">{title}</h1>
+
+        <div className="flex gap-8">
+          <div className="text-[16px] mt-[-10px]">作者：{author?.username}</div>
+          <div className="text-[16px] mt-[-10px]">更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}</div>
+        </div>
+
+        {imageUrl && <Image src={imageUrl} alt={title} width={1000} height={400} />}
+      </div>
+      <div className="w-4/5 flex gap-4 justify-start mt-16">
+        <ArticleContent content={content} />
+      </div>
+    </div>
+  )
 }

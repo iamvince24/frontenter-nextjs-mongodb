@@ -8,6 +8,11 @@ export interface Article {
   createdAt: string
   updatedAt: string
   isCollected: boolean
+  imageUrl?: string
+  author?: {
+    id: string
+    username: string
+  }
 }
 
 export interface PaginationInfo {
