@@ -1,28 +1,26 @@
-import * as React from "react";
-import Image from "next/image";
-import { NavButton } from "@/components/ui/NavButton";
-import Link from "next/link";
+import * as React from 'react'
+import Image from 'next/image'
+import { NavButton } from '@/components/ui/NavButton'
+import Link from 'next/link'
 
 const links: { title: string; href: string; description: string }[] = [
   {
-    title: "文章",
-    href: "/article",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
+    title: '文章',
+    href: '/articles',
+    description: 'A modal dialog that interrupts the user with important content and expects a response.',
   },
   {
-    title: "註冊",
-    href: "/signup",
-    description:
-      "For sighted users to preview content available behind a link.",
+    title: '註冊',
+    href: '/signup',
+    description: 'For sighted users to preview content available behind a link.',
   },
   {
-    title: "登入",
-    href: "/login",
+    title: '登入',
+    href: '/login',
     description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+      'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
   },
-];
+]
 
 export default function Footer() {
   return (
@@ -41,10 +39,7 @@ export default function Footer() {
         {/* <p>0975-282-222</p> */}
         {/* <a href="mailto:mynameisvince24@gmail.com">mynameisvince24@gmail.com</a> */}
         <div className="flex flex-row gap-3">
-          <Link
-            href="https://www.facebook.com/profile.php?id=100079762316652"
-            target="_blank"
-          >
+          <Link href="https://www.facebook.com/profile.php?id=100079762316652" target="_blank">
             <Image
               className="w-[25px] h-[25px] mt-0 hover:opacity-80 transition-transform duration-250 ease-in hover:scale-125 md:mt-[2px] sm:w-[30px] sm:h-[30px]"
               width={29}
@@ -65,5 +60,5 @@ export default function Footer() {
         </div>
       </section>
     </footer>
-  );
+  )
 }

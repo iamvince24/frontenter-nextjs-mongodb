@@ -7,10 +7,23 @@ export interface Article {
   isPublic: boolean
   createdAt: string
   updatedAt: string
+  isCollected: boolean
 }
 
-const fetchAllPublicArticles = async (): Promise<Article[]> => {
-  const response = await fetch('/api/articles/public')
+export interface PaginationInfo {
+  total: number
+  totalPages: number
+  currentPage: number
+  limit: number
+}
+
+export interface ArticlesResponse {
+  articles: Article[]
+  pagination: PaginationInfo
+}
+
+const fetchAllPublicArticles = async (page: number = 1, limit: number = 8): Promise<ArticlesResponse> => {
+  const response = await fetch(`/api/articles/public?page=${page}&limit=${limit}`)
 
   if (!response.ok) {
     const errorData = await response.json()
@@ -20,9 +33,9 @@ const fetchAllPublicArticles = async (): Promise<Article[]> => {
   return response.json()
 }
 
-export const useAllPublicArticles = () => {
-  return useQuery<Article[], Error>({
-    queryKey: ['articles', 'public'],
-    queryFn: fetchAllPublicArticles,
+export const useAllPublicArticles = (page: number = 1, limit: number = 8) => {
+  return useQuery<ArticlesResponse, Error>({
+    queryKey: ['articles', 'public', page, limit],
+    queryFn: () => fetchAllPublicArticles(page, limit),
   })
 }

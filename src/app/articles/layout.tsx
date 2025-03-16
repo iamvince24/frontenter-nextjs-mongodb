@@ -1,10 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import Link from 'next/link'
 import { NavButton } from '@/components/ui/NavButton'
-import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
 
 const ChangeBackground = () => {
   return (
@@ -56,20 +53,20 @@ export default function ArticlesLayout({
   return (
     <main className="w-full flex min-h-screen flex-col items-center">
       <section
-        className="w-full h-[380px] bg-cover bg-no-repeat bg-center bg-local flex flex-col justify-center items-center"
+        className="w-full h-[380px] bg-cover bg-no-repeat bg-center bg-local flex flex-col justify-center items-center mb-16"
         style={{ animation: 'changeBackground 20s infinite' }}
       >
         <ChangeBackground />
         <div className="text-2xl text-white tracking-widest font-bold">蒐羅前端學校</div>
       </section>
-      <section className="w-full h-[70px] shadow-[0_0_25px_rgba(128,128,128,0.8)] flex justify-center mb-40">
+      {/* <section className="w-full h-[70px] shadow-[0_0_25px_rgba(128,128,128,0.8)] flex justify-center mb-40">
         <div className="w-1/2 h-full flex justify-between items-center">
           <NavButton>全部</NavButton>
           <NavButton>小班制</NavButton>
           <NavButton>放養制</NavButton>
           <NavButton>一對一</NavButton>
         </div>
-      </section>
+      </section> */}
       {children}
     </main>
   )

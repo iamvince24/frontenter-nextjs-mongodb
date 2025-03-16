@@ -13,7 +13,7 @@ import { usePathname } from 'next/navigation'
 const links: { title: string; href: string; description: string }[] = [
   {
     title: '文章',
-    href: '/article',
+    href: '/articles',
     description: 'A modal dialog that interrupts the user with important content and expects a response.',
   },
 ]
