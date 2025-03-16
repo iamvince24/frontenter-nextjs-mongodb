@@ -21,8 +21,8 @@ export default function LogInForm({ onDialogClose }: LogInFormProps) {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'test1234@gmail.com',
+      password: 'test1234',
     },
   })
 
