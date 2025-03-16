@@ -7,6 +7,10 @@ interface Article {
   updatedAt: string
   content: string
   isCollected: boolean
+  author?: {
+    id: string
+    username: string
+  }
   imageUrl?: string
   className?: string
   introduction?: string

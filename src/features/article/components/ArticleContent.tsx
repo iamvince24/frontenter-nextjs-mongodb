@@ -6,7 +6,7 @@ import Image from '@tiptap/extension-image'
 import { useEffect } from 'react'
 
 interface ArticleContentProps {
-  content: any // TipTap 內容通常是 JSON 格式
+  content: any
 }
 
 export const ArticleContent = ({ content }: ArticleContentProps) => {

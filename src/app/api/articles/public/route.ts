@@ -24,6 +24,14 @@ export async function GET(req: NextRequest) {
       where: {
         isPublic: true,
       },
+      include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
       skip,
       take: limit,
       orderBy: {

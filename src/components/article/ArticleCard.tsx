@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import Image from 'next/image'
-import { FaLocationDot } from 'react-icons/fa6'
 import { IoIosArrowForward } from 'react-icons/io'
 import FavoriteBtn from '../ui/FavoriteBtn'
 import { Button } from '../ui/button'
@@ -10,14 +9,13 @@ import { Article } from '@/features/article/hooks/useFavoriteArticles'
 import { useFavorite } from '@/features/article/hooks/useFavorite'
 import { LoadingSpinner } from '../loading/LoadingSpinner'
 import Link from 'next/link'
+import dayjs from 'dayjs'
 
-const ArticleCardStyle = ({ children, articleId }: { children: React.ReactNode; articleId?: string }) => {
+const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Link href={`/article/${articleId}`}>
-      <div className="w-[330px] h-[430px] m-2.5 p-3 text-[var(--text-size-h3)] border border-[var(--primary-color)] rounded-md flex flex-col items-center justify-between">
-        {children}
-      </div>
-    </Link>
+    <div className="w-[330px] h-[410px] mx-8 my-0 text-[var(--text-size-h3)] flex flex-col items-center justify-between">
+      {children}
+    </div>
   )
 }
 
@@ -32,7 +30,7 @@ export default function ArticleCard({
   isEditorAble?: boolean
   onSuccess?: () => Promise<void>
 }) {
-  const { id: articleId, authorId, classLocation, imageUrl, className, title, isCollected } = articleData
+  const { id: articleId, updatedAt, imageUrl, className, title, isCollected, author } = articleData
 
   const { toggleFavorite, isLoading } = useFavorite({
     userId: userId || '',
@@ -50,34 +48,47 @@ export default function ArticleCard({
   }
 
   return (
-    <ArticleCardStyle articleId={articleId}>
-      <div className="w-full flex flex-row justify-between items-center my-[30px] mt-0 mb-[20px]">
-        <div></div>
-        <div className="flex flex-row">
-          <FaLocationDot color="lightgreen" className="w-6 h-6 mx-5" />
-          <div>{classLocation}</div>
-        </div>
-        <div>{userId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}</div>
-      </div>
+    <ArticleCardStyle>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
-        <div className="w-[250px] h-[150px] overflow-hidden ">
-          {imageUrl && (
-            <Image
-              className="w-full h-full rounded-md transition-transform duration-1000 ease-in-out hover:scale-110 object-cover"
-              width={1000}
-              height={1000}
-              src={imageUrl}
-              alt={className || articleData.title}
-            />
-          )}
-        </div>
-        <p className="inline m-0 whitespace-nowrap tracking-[1.5px]">{title}</p>
-        <div className="w-full flex justify-center items-center my-[5px] mb-[50px] px-[20px] py-0">
-          <div className="mr-[5px] transition-transform duration-[600ms] ease-linear hover:-translate-x-[15px]">
-            read more
+        <div className="w-full flex flex-col gap-4">
+          <div className="w-[350px] h-[200px] overflow-hidden">
+            {imageUrl && (
+              <Link href={`/article/${articleId}`}>
+                <Image
+                  className="w-full h-full transition-transform duration-1000 ease-in-out hover:scale-110"
+                  width={1000}
+                  height={1000}
+                  src={imageUrl}
+                  alt={className || articleData.title}
+                />
+              </Link>
+            )}
           </div>
-          <IoIosArrowForward />
+          <div className="w-full flex justify-between items-start text-left">
+            <Link href={`/article/${articleId}`} className="mr-3">
+              <h2 className="inline tracking-[0.5px] text-left text-[20px] font-bold">{title}</h2>
+            </Link>
+            <div className="mt-1">
+              {userId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}
+            </div>
+          </div>
         </div>
+
+        <div className="w-full flex flex-col items-start mb-[50px] text-left">
+          {author?.username && (
+            <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">作者：{author?.username}</div>
+          )}
+          <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">
+            更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
+          </div>
+          <div className="w-full flex flex-row items-center group">
+            <Link href={`/article/${articleId}`}>
+              <div className="mr-[5px]">read more</div>
+            </Link>
+            <IoIosArrowForward className="transition-transform duration-[600ms] ease-linear group-hover:translate-x-[15px]" />
+          </div>
+        </div>
+
         {isEditorAble && (
           <Button variant="outline" size="sm" asChild onClick={e => e.stopPropagation()}>
             <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
