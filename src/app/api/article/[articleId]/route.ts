@@ -61,7 +61,7 @@ export async function PUT(req: NextRequest, { params }: { params: { articleId: s
       data: {
         ...(title !== undefined && { title }),
         ...(content !== undefined && { content }),
-        ...(imageUrl !== imageUrl && { imageUrl }),
+        ...(imageUrl !== undefined && imageUrl !== existingArticle.imageUrl && { imageUrl }),
         ...(isPublic !== undefined && { isPublic }),
         updatedAt: new Date(),
       },
@@ -70,6 +70,36 @@ export async function PUT(req: NextRequest, { params }: { params: { articleId: s
     return NextResponse.json(updatedArticle, { status: 200 })
   } catch (error) {
     console.error('更新文章時出錯:', error)
+    return NextResponse.json(
+      { error: '內部伺服器錯誤', details: error instanceof Error ? error.message : String(error) },
+      { status: 500 },
+    )
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: { articleId: string } }) {
+  try {
+    const { articleId } = params
+
+    if (!articleId) {
+      return NextResponse.json({ message: '文章 ID 是必需的' }, { status: 400 })
+    }
+
+    const existingArticle = await prisma.article.findUnique({
+      where: { id: articleId },
+    })
+
+    if (!existingArticle) {
+      return NextResponse.json({ message: '找不到文章' }, { status: 404 })
+    }
+
+    await prisma.article.delete({
+      where: { id: articleId },
+    })
+
+    return NextResponse.json({ message: '文章已成功刪除' }, { status: 200 })
+  } catch (error) {
+    console.error('刪除文章時出錯:', error)
     return NextResponse.json(
       { error: '內部伺服器錯誤', details: error instanceof Error ? error.message : String(error) },
       { status: 500 },
