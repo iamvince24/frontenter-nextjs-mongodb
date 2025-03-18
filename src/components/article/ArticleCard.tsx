@@ -85,7 +85,7 @@ export default function ArticleCard({
             <Link href={`/article/${articleId}`}>
               <div className="mr-[5px]">read more</div>
             </Link>
-            <IoIosArrowForward className="transition-transform duration-[600ms] ease-linear group-hover:translate-x-[15px]" />
+            <IoIosArrowForward className="transition-transform duration-600 ease-linear group-hover:translate-x-[15px]" />
           </div>
         </div>
 

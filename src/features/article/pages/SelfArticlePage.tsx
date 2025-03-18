@@ -14,7 +14,7 @@ interface SelfArticlePageProps {
 }
 
 const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
-  const authorId = currentUser.id
+  const authorId = currentUser?.id
 
   const { data: articles, isLoading, error, isError, refetch } = useAuthorArticles(authorId)
 

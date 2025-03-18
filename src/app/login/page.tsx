@@ -1,9 +1,5 @@
-import LoginInForm from "@/components/page/auth/LogInForm";
+import LogInForm from '@/features/auth/components/LogInForm'
 
 export default function SignUpModal() {
-  return (
-    <div>
-      <LoginInForm />
-    </div>
-  );
+  return <LogInForm />
 }

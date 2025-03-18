@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { NavButton } from '@/components/ui/NavButton'
 
 const ChangeBackground = () => {
   return (

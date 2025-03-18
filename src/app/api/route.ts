@@ -1,32 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@prisma/client";
+import { NextResponse } from 'next/server'
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "GET") {
-    const { id } = req.query;
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
 
-    try {
-      const user = await prisma.user.findUnique({
-        where: { id: id as string },
-      });
+  if (!id) {
+    return NextResponse.json({ success: false, message: 'ID is required' }, { status: 400 })
+  }
 
-      if (user) {
-        res.status(200).json({ success: true, data: user });
-      } else {
-        res.status(404).json({ success: false, message: "User not found" });
-      }
-    } catch (error) {
-      console.error(error);
-      res
-        .status(500)
-        .json({ success: false, message: "Failed to retrieve user" });
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    })
+
+    if (user) {
+      return NextResponse.json({ success: true, data: user })
+    } else {
+      return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 })
     }
-  } else {
-    res.status(405).json({ success: false, message: "Method not allowed" });
+  } catch (error) {
+    console.error(error)
+    return NextResponse.json({ success: false, message: 'Failed to retrieve user' }, { status: 500 })
   }
 }

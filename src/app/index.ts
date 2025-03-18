@@ -1,24 +1,24 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function main() {
   await prisma.user.create({
     data: {
-      username: "Rich",
-      email: "hello@prisma.com",
+      username: 'Rich',
+      email: 'hello@prisma.com',
     },
-  });
+  })
 
-  const allUsers = await prisma.user.findMany();
-  console.dir(allUsers, { depth: null });
+  const allUsers = await prisma.user.findMany()
+  console.dir(allUsers, { depth: null })
 }
 
 main()
-  .catch(async (e) => {
-    console.error(e);
-    process.exit(1);
+  .catch(async e => {
+    console.error(e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

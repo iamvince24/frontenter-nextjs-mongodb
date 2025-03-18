@@ -1,90 +1,65 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import multer from "multer";
-import prisma from "@/lib/prismadb";
-import { getCurrentUser } from "@/actions/getCurrentUser";
-import { runMiddleware } from "@/lib/utils";
+import { NextRequest, NextResponse } from 'next/server'
+import multer from 'multer'
+import prisma from '@/lib/prismadb'
+import { getCurrentUser } from '@/actions/getCurrentUser'
+import { runMiddleware } from '@/lib/utils'
 
-// 設置存儲位置和文件命名規則
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    cb(null, `${Date.now()}-${file.originalname}`)
   },
-});
+})
 
-// 配置 Multer 中間件
-const upload = multer({ storage: storage });
-const uploadMiddleware = upload.single("image");
+const upload = multer({ storage: storage })
+const uploadMiddleware = upload.single('image')
 
-// 禁用 Next.js 的內建 body 解析，讓 Multer 處理
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log(`Request method: ${req.method}`);
-  if (req.method !== "POST") {
-    console.error("Method Not Allowed");
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    await runMiddleware(req, res, uploadMiddleware);
-    console.log("File upload middleware passed");
-    const currentUser = await getCurrentUser();
-    const authorId = currentUser?.id;
+    const req = {
+      ...request,
+      headers: Object.fromEntries(request.headers),
+      query: Object.fromEntries(new URL(request.url).searchParams),
+    } as any
+
+    const res = {} as any
+    await runMiddleware(req, res, uploadMiddleware)
+
+    const currentUser = await getCurrentUser()
+    const authorId = currentUser?.id
 
     if (!authorId) {
-      console.error("Unauthorized: No current user");
-      return res.status(401).json({ error: "Unauthorized" });
+      console.error('Unauthorized: No current user')
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const file = (req as any).file;
-    const { path } = file;
-    const {
-      title,
-      className,
-      introduction,
-      classLocation,
-      classType,
-      fee,
-      teachingMethod,
-      technology,
-      totalDays,
-      weeklyHours,
-      content,
-    } = req.body;
+    const file = req.file
+    const { path } = file
 
-    console.log("Request body:", req.body);
+    const formData = await request.formData()
+    const title = formData.get('title') as string
+    const content = formData.get('content') as string
+
+    console.log('Request data:', { title, content })
 
     const article = await prisma.article.create({
       data: {
         authorId,
         title,
-        className,
-        introduction,
-        classLocation,
-        classType,
-        fee: parseFloat(fee),
-        teachingMethod,
-        technology,
-        totalDays: parseInt(totalDays),
-        weeklyHours: parseInt(weeklyHours),
         content,
         imageUrl: path,
       },
-    });
+    })
 
-    console.log("Article created:", article);
-    return res.status(200).json({ article });
+    console.log('Article created:', article)
+    return NextResponse.json({ article }, { status: 200 })
   } catch (error) {
-    console.error("Failed to upload image:", error);
-    res.status(500).json({ error: "Failed to upload image" });
+    console.error('Failed to upload image:', error)
+    return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 })
   }
-};
-
-export default handler;
+}

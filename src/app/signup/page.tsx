@@ -1,9 +1,9 @@
-import SignUpForm from "@/components/page/auth/SignUpForm";
+import SignUpForm from '@/features/auth/components/SignUpForm'
 
 export default function SignUpModal() {
   return (
     <div>
       <SignUpForm />
     </div>
-  );
+  )
 }

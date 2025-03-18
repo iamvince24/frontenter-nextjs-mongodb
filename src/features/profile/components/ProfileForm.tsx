@@ -1,44 +1,25 @@
-import { IoIosInformationCircleOutline } from "react-icons/io";
-import { CurrentUser } from "@/actions/getCurrentUser";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { UseFormReturn } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { profileFormSchema } from "../hooks/useUpdateProfile";
+import { IoIosInformationCircleOutline } from 'react-icons/io'
+import { CurrentUser } from '@/actions/getCurrentUser'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { UseFormReturn } from 'react-hook-form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { profileFormSchema } from '../hooks/useUpdateProfile'
 
 interface ProfileFormProps {
-  currentUser: CurrentUser;
-  isLoading: boolean;
-  onSubmit: (values: ProfileFormValues) => void;
-  onCancel: () => void;
-  form: UseFormReturn<ProfileFormValues>;
+  currentUser: CurrentUser
+  isLoading: boolean
+  onSubmit: (values: ProfileFormValues) => void
+  onCancel: () => void
+  form: UseFormReturn<ProfileFormValues>
 }
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-const ProfileForm = ({
-  currentUser,
-  isLoading,
-  onSubmit,
-  onCancel,
-  form,
-}: ProfileFormProps) => {
+const ProfileForm = ({ currentUser, isLoading, onSubmit, onCancel, form }: ProfileFormProps) => {
   return (
     <Form {...form}>
       <form
@@ -95,20 +76,15 @@ const ProfileForm = ({
 
         <div className="flex gap-4">
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? "儲存中..." : "儲存變更"}
+            {isLoading ? '儲存中...' : '儲存變更'}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
             取消
           </Button>
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default ProfileForm;
+export default ProfileForm
