@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { NavButton } from '@/components/ui/NavButton'
 import Link from 'next/link'
@@ -10,6 +10,7 @@ import LogInForm from '../../../features/auth/components/LogInForm'
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import SearchInputComponent from '@/components/search/SearchInputComponent'
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 
 const links: { title: string; href: string; description: string }[] = [
   {
@@ -38,7 +39,9 @@ function Navbar({ currentUsername: initialUsername }: { currentUsername?: string
         <Image width={403} height={195} src="/feLogo.png" alt="feLogo" className="w-36" />
       </Link>
       <div className="flex gap-x-0 sm:gap-x-4 md:gap-x-8">
-        <SearchInputComponent placeholder="輸入關鍵字..." />
+        <Suspense fallback={<LoadingSpinner text="載入文章中..." />}>
+          <SearchInputComponent placeholder="輸入關鍵字..." />
+        </Suspense>
         {links?.map(link => {
           return (
             <Link href={link.href} key={link.title}>
