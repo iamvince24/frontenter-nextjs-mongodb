@@ -25,10 +25,23 @@ export interface PaginationInfo {
 export interface ArticlesResponse {
   articles: Article[]
   pagination: PaginationInfo
+  search: string | null
 }
 
-const fetchAllPublicArticles = async (page: number = 1, limit: number = 8): Promise<ArticlesResponse> => {
-  const response = await fetch(`/api/articles/public?page=${page}&limit=${limit}`)
+const fetchAllPublicArticles = async (
+  page: number = 1,
+  limit: number = 8,
+  search: string | null = null,
+): Promise<ArticlesResponse> => {
+  const params = new URLSearchParams()
+  params.append('page', page.toString())
+  params.append('limit', limit.toString())
+
+  if (search !== null) {
+    params.append('search', search)
+  }
+
+  const response = await fetch(`/api/articles/public?${params.toString()}`)
 
   if (!response.ok) {
     const errorData = await response.json()
@@ -38,9 +51,9 @@ const fetchAllPublicArticles = async (page: number = 1, limit: number = 8): Prom
   return response.json()
 }
 
-export const useAllPublicArticles = (page: number = 1, limit: number = 8) => {
+export const useAllPublicArticles = (page: number = 1, limit: number = 8, search: string | null = null) => {
   return useQuery<ArticlesResponse, Error>({
-    queryKey: ['articles', 'public', page, limit],
-    queryFn: () => fetchAllPublicArticles(page, limit),
+    queryKey: ['articles', 'public', page, limit, search],
+    queryFn: () => fetchAllPublicArticles(page, limit, search),
   })
 }

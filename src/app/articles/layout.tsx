@@ -52,7 +52,7 @@ export default function ArticlesLayout({
   return (
     <main className="w-full flex min-h-screen flex-col items-center">
       <section
-        className="w-full h-[380px] bg-cover bg-no-repeat bg-center bg-local flex flex-col justify-center items-center mb-16"
+        className="w-full h-[380px] bg-cover bg-no-repeat bg-center bg-local flex flex-col justify-center items-center mb-4"
         style={{ animation: 'changeBackground 20s infinite' }}
       >
         <ChangeBackground />

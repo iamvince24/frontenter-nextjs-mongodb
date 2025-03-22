@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { getCurrentUser } from '@/actions/getCurrentUser'
 
 export const dynamic = 'force-dynamic'
@@ -11,21 +11,40 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '8')
+    const searchTitle = searchParams.get('search')
     const skip = (page - 1) * limit
 
     const currentUser = await getCurrentUser()
     const currentUserId = currentUser?.id
 
+    const whereCondition: Prisma.ArticleWhereInput = {
+      isPublic: true,
+      ...(searchTitle !== null && searchTitle.trim() !== ''
+        ? {
+            OR: [
+              {
+                title: {
+                  contains: searchTitle,
+                  mode: 'insensitive' as Prisma.QueryMode,
+                },
+              },
+              {
+                content: {
+                  contains: searchTitle,
+                  mode: 'insensitive' as Prisma.QueryMode,
+                },
+              },
+            ],
+          }
+        : undefined),
+    }
+
     const totalCount = await prisma.article.count({
-      where: {
-        isPublic: true,
-      },
+      where: whereCondition,
     })
 
     const articles = await prisma.article.findMany({
-      where: {
-        isPublic: true,
-      },
+      where: whereCondition,
       include: {
         author: {
           select: {

@@ -14,10 +14,11 @@ export default function ArticlesListPage() {
   const { data: session } = useSession()
   const searchParams = useSearchParams()
 
+  const search = searchParams.get('search')
   const currentPage = parseInt(searchParams.get('page') || '1')
   const ITEMS_PER_PAGE = 8
 
-  const { data, isLoading, isError, error, refetch } = useAllPublicArticles(currentPage, ITEMS_PER_PAGE)
+  const { data, isLoading, isError, error, refetch } = useAllPublicArticles(currentPage, ITEMS_PER_PAGE, search)
 
   const articles = data?.articles || []
   const totalPages = data?.pagination?.totalPages || 1
@@ -36,6 +37,7 @@ export default function ArticlesListPage() {
 
   return (
     <div>
+      {search && <div className="text-xl font-bold  mb-16 flex justify-center ">搜尋結果：{search}</div>}
       <ArticlesGridLayout>
         {articles.map(article => (
           <ArticleCard
