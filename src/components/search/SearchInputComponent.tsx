@@ -24,11 +24,11 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({ placeholder = 'æœå°
       return
     }
 
-    const currentSearchValue = searchParams.get('search') || ''
-    if (currentSearchValue) {
-      setSearchValue(currentSearchValue)
-      setIsSearchOpen(true)
-    }
+    // const currentSearchValue = searchParams.get('search') || ''
+    // if (currentSearchValue) {
+    //   setSearchValue(currentSearchValue)
+    //   setIsSearchOpen(true)
+    // }
   }, [searchParams])
 
   const toggleSearch = (): void => {

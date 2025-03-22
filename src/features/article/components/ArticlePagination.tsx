@@ -30,7 +30,7 @@ const ArticlePagination = ({ currentPage, totalPages, basePath, className = '' }
   }
 
   return (
-    <Pagination className={`mt-10 mb-5 ${className}`}>
+    <Pagination className={`mb-5 ${className}`}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious

@@ -5,9 +5,11 @@ import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import { Button } from '@/components/ui/button'
 import ArticlePagination from '@/features/article/components/ArticlePagination'
 import { Article, useAllPublicArticles } from '@/features/article/hooks/useArticles'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
 export default function ArticlesListPage() {
@@ -35,9 +37,21 @@ export default function ArticlesListPage() {
     return <EmptyState message="沒有找到公開的文章" />
   }
 
+  const clearSearchUrl = `/articles${currentPage > 1 ? `?page=${currentPage}` : ''}`
+
   return (
-    <div>
-      {search && <div className="text-xl font-bold  mb-16 flex justify-center ">搜尋結果：{search}</div>}
+    <div className={`flex flex-col gap-16 ${search ? '' : 'mt-16'}`}>
+      {search && (
+        <div className="flex justify-center items-center gap-4">
+          <div className="text-xl font-bold  ">搜尋結果：{search}</div>
+          <Link href={clearSearchUrl} passHref>
+            <Button variant="outline" size="sm">
+              清除搜尋結果
+            </Button>
+          </Link>
+        </div>
+      )}
+
       <ArticlesGridLayout>
         {articles.map(article => (
           <ArticleCard
