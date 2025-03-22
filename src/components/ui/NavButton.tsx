@@ -26,11 +26,16 @@ const buttonVariants = cva(
         true: 'bg-gray-200 text-accent-foreground',
         false: '',
       },
+      hover: {
+        true: 'hover:bg-gray-200 text-accent-foreground',
+        false: '',
+      },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
       active: false,
+      hover: true,
     },
   },
 )

@@ -9,6 +9,7 @@ import SignUpForm from '../../../features/auth/components/SignUpForm'
 import LogInForm from '../../../features/auth/components/LogInForm'
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
+import SearchInputComponent from '@/components/search/SearchInputComponent'
 
 const links: { title: string; href: string; description: string }[] = [
   {
@@ -37,6 +38,7 @@ function Navbar({ currentUsername: initialUsername }: { currentUsername?: string
         <Image width={403} height={195} src="/feLogo.png" alt="feLogo" className="w-36" />
       </Link>
       <div className="flex gap-x-0 sm:gap-x-4 md:gap-x-8">
+        <SearchInputComponent placeholder="輸入關鍵字..." />
         {links?.map(link => {
           return (
             <Link href={link.href} key={link.title}>
