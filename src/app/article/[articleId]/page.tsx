@@ -1,4 +1,6 @@
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import ArticleContentPage from '@/features/article/pages/ArticleContentPage'
+import { Suspense } from 'react'
 
 export default async function ArticlePage({ params }: { params: Promise<{ articleId: string }> }) {
   const { articleId } = await params
@@ -12,5 +14,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ articl
 
   const article = await response.json()
 
-  return <ArticleContentPage article={article} />
+  return (
+    <Suspense fallback={<LoadingSpinner text="載入文章中..." />}>
+      <ArticleContentPage article={article} />
+    </Suspense>
+  )
 }

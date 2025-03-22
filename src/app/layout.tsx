@@ -6,6 +6,8 @@ import Footer from '@/components/page/footer/Footer'
 import './globals.css'
 import { getCurrentUser } from '@/actions/getCurrentUser'
 import Providers from './providers'
+import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import { Suspense } from 'react'
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +39,7 @@ export default async function RootLayout({
       <body className={cn('min-h-screen bg-background font-sans antialiased flex flex-col', fontSans.variable)}>
         <Providers>
           <Navbar currentUsername={currentUsername} />
-          {children}
+          <Suspense fallback={<LoadingSpinner text="載入中..." />}>{children}</Suspense>
           <Footer />
         </Providers>
       </body>

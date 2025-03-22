@@ -29,18 +29,18 @@ export default function ProfileTab({
 
         <div className="flex justify-center my-5 gap-3 items-center">
           {navItems.map(item => (
-            <Link href={item.path} key={item.path}>
+            <Link href={item.path} key={item.path} prefetch={true}>
               <NavButton active={pathname === item.path}>{item.label}</NavButton>
             </Link>
           ))}
         </div>
 
         {isInCreatePage || isInEditPage ? (
-          <Link href="/profile/article/self" className="justify-self-end">
+          <Link href="/profile/article/self" className="justify-self-end" prefetch={true}>
             <Button size="sm">取消</Button>
           </Link>
         ) : (
-          <Link href="/profile/article/create" className="justify-self-end">
+          <Link href="/profile/article/create" className="justify-self-end" prefetch={true}>
             <Button size="sm">新增文章</Button>
           </Link>
         )}
