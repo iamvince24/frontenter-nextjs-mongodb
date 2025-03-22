@@ -19,6 +19,22 @@ const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
+const ArticleLink = ({
+  articleId,
+  children,
+  className,
+}: {
+  articleId: string
+  children: React.ReactNode
+  className?: string
+}) => {
+  return (
+    <Link href={`/article/${articleId}`} prefetch={true} className={className}>
+      {children}
+    </Link>
+  )
+}
+
 export default function ArticleCard({
   articleData,
   userId,
@@ -30,7 +46,7 @@ export default function ArticleCard({
   isEditorAble?: boolean
   onSuccess?: () => Promise<void>
 }) {
-  const { id: articleId, updatedAt, imageUrl, className, title, isCollected, author } = articleData
+  const { id: articleId, updatedAt, imageUrl, className: articleClassName, title, isCollected, author } = articleData
 
   const { toggleFavorite, isLoading } = useFavorite({
     userId: userId || '',
@@ -53,21 +69,21 @@ export default function ArticleCard({
         <div className="w-full flex flex-col gap-4">
           <div className="w-[350px] h-[200px] overflow-hidden">
             {imageUrl && (
-              <Link href={`/article/${articleId}`}>
+              <ArticleLink articleId={articleId} className={articleClassName}>
                 <Image
                   className="w-full h-full transition-transform duration-1000 ease-in-out hover:scale-110"
                   width={1000}
                   height={1000}
                   src={imageUrl}
-                  alt={className || articleData.title}
+                  alt={articleClassName || articleData.title}
                 />
-              </Link>
+              </ArticleLink>
             )}
           </div>
           <div className="w-full flex justify-between items-start text-left">
-            <Link href={`/article/${articleId}`} className="mr-3">
+            <ArticleLink articleId={articleId} className="mr-3">
               <h2 className="inline tracking-[0.5px] text-left text-[20px] font-bold">{title}</h2>
-            </Link>
+            </ArticleLink>
             <div className="mt-1">
               {userId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}
             </div>
@@ -82,9 +98,9 @@ export default function ArticleCard({
             更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
           </div>
           <div className="w-full flex flex-row items-center group">
-            <Link href={`/article/${articleId}`}>
+            <ArticleLink articleId={articleId}>
               <div className="mr-[5px]">read more</div>
-            </Link>
+            </ArticleLink>
             <IoIosArrowForward className="transition-transform duration-600 ease-linear group-hover:translate-x-[15px]" />
           </div>
         </div>
