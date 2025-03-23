@@ -10,6 +10,8 @@ import { LoadingSpinner } from '../loading/LoadingSpinner'
 import Link from 'next/link'
 import dayjs from 'dayjs'
 import dynamic from 'next/dynamic'
+import DeleteArticleButton from './DeleteArticleButton'
+import { useDeleteArticle } from '@/features/article/hooks/useDeleteArticle'
 
 const FavoriteBtn = dynamic(() => import('../ui/FavoriteBtn'), { ssr: false })
 
@@ -59,6 +61,14 @@ export default function ArticleCard({
     articleId,
     isCollected,
     onSuccess,
+  })
+
+  const { deleteArticle, isDeleting } = useDeleteArticle({
+    // onSuccess: async () => {
+    //   if (onSuccess) {
+    //     await onSuccess()
+    //   }
+    // },
   })
 
   if (isLoading) {
@@ -125,15 +135,22 @@ export default function ArticleCard({
           </div>
 
           {isEditorAble && (
-            <Button
-              variant="default"
-              size="sm"
-              asChild
-              className="w-fit self-center"
-              onClick={e => e.stopPropagation()}
-            >
-              <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
-            </Button>
+            <div className="flex flex-row gap-2 justify-center">
+              <Button variant="default" size="sm" asChild className="w-fit" onClick={e => e.stopPropagation()}>
+                <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
+              </Button>
+
+              {/* <Button size="sm" variant="outline" onClick={e => e.stopPropagation()}>
+                刪除
+              </Button> */}
+              <DeleteArticleButton
+                articleId={articleId}
+                onDeleteConfirm={e => {
+                  // e.stopPropagation()
+                  deleteArticle(articleId)
+                }}
+              />
+            </div>
           )}
         </div>
       </div>

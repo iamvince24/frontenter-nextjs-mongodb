@@ -61,7 +61,7 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 mb-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <h2 className="text-2xl font-bold">會員資料</h2>

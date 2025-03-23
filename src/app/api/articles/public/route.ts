@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
 
     const whereCondition: Prisma.ArticleWhereInput = {
       isPublic: true,
+      deletedAt: null,
       ...(searchTitle !== null && searchTitle.trim() !== ''
         ? {
             OR: [

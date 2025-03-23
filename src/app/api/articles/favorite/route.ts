@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
   try {
     const collections = await prisma.collection.findMany({
-      where: { userId },
+      where: { userId, article: { deletedAt: null } },
       include: {
         article: {
           include: {

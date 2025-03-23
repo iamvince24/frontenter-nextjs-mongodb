@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: { authorId: st
 
   try {
     const articles = await prisma.article.findMany({
-      where: { authorId: authorId },
+      where: { authorId: authorId, deletedAt: null },
       include: {
         author: {
           select: {

@@ -93,8 +93,11 @@ export async function DELETE(req: NextRequest, { params }: { params: { articleId
       return NextResponse.json({ message: '找不到文章' }, { status: 404 })
     }
 
-    await prisma.article.delete({
+    await prisma.article.update({
       where: { id: articleId },
+      data: {
+        deletedAt: new Date(),
+      },
     })
 
     return NextResponse.json({ message: '文章已成功刪除' }, { status: 200 })
