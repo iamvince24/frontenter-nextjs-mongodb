@@ -83,7 +83,7 @@ export default function ArticleCard({
                   width={350}
                   height={200}
                   src={imageUrl}
-                  alt={articleClassName || articleData.title}
+                  alt={`${title} 的文章封面圖片`}
                   loading="eager"
                   sizes="(max-width: 768px) 100vw, 350px"
                   blurDataURL={generateBlurDataURL(imageUrl)}
@@ -110,7 +110,7 @@ export default function ArticleCard({
             更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
           </div>
           <div className="w-full flex flex-row items-center group">
-            <ArticleLink article={articleData}>
+            <ArticleLink article={articleData} aria-label={`閱讀更多關於 ${articleData.title} 的內容`}>
               <div className="mr-[5px]">read more</div>
             </ArticleLink>
             <IoIosArrowForward className="transition-transform duration-600 ease-linear group-hover:translate-x-[15px]" />
