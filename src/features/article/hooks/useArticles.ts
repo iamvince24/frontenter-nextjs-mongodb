@@ -30,7 +30,7 @@ export interface ArticlesResponse {
 
 const fetchAllPublicArticles = async (
   page: number = 1,
-  limit: number = 8,
+  limit: number = 9,
   search: string | null = null,
 ): Promise<ArticlesResponse> => {
   const params = new URLSearchParams()

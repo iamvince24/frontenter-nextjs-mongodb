@@ -3,13 +3,15 @@
 import * as React from 'react'
 import Image from 'next/image'
 import { IoIosArrowForward } from 'react-icons/io'
-import FavoriteBtn from '../ui/FavoriteBtn'
 import { Button } from '../ui/button'
 import { Article } from '@/features/article/hooks/useFavoriteArticles'
 import { useFavorite } from '@/features/article/hooks/useFavorite'
 import { LoadingSpinner } from '../loading/LoadingSpinner'
 import Link from 'next/link'
 import dayjs from 'dayjs'
+import dynamic from 'next/dynamic'
+
+const FavoriteBtn = dynamic(() => import('../ui/FavoriteBtn'), { ssr: false })
 
 const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -40,11 +42,13 @@ export default function ArticleCard({
   userId,
   isEditorAble,
   onSuccess,
+  index,
 }: {
   articleData: Article
   userId?: string
   isEditorAble?: boolean
   onSuccess?: () => Promise<void>
+  index?: number
 }) {
   const { id: articleId, updatedAt, imageUrl, className: articleClassName, title, isCollected, author } = articleData
 
@@ -63,6 +67,10 @@ export default function ArticleCard({
     )
   }
 
+  const generateBlurDataURL = (src: string) => {
+    return src.replace('/upload/', '/upload/w_10,h_6,q_30,c_fill,e_blur:1000/')
+  }
+
   return (
     <ArticleCardStyle>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
@@ -72,10 +80,14 @@ export default function ArticleCard({
               <ArticleLink articleId={articleId} className={articleClassName}>
                 <Image
                   className="w-full h-full transition-transform duration-1000 ease-in-out hover:scale-110"
-                  width={1000}
-                  height={1000}
+                  width={350}
+                  height={200}
                   src={imageUrl}
                   alt={articleClassName || articleData.title}
+                  loading="eager"
+                  sizes="(max-width: 768px) 100vw, 350px"
+                  blurDataURL={generateBlurDataURL(imageUrl)}
+                  priority={index !== undefined && index < 3}
                 />
               </ArticleLink>
             )}

@@ -18,7 +18,7 @@ export default function ArticlesListPage() {
 
   const search = searchParams.get('search')
   const currentPage = parseInt(searchParams.get('page') || '1')
-  const ITEMS_PER_PAGE = 8
+  const ITEMS_PER_PAGE = 9
 
   const { data, isLoading, isError, error, refetch } = useAllPublicArticles(currentPage, ITEMS_PER_PAGE, search)
 
@@ -53,12 +53,13 @@ export default function ArticlesListPage() {
       )}
 
       <ArticlesGridLayout>
-        {articles.map(article => (
+        {articles.map((article, index) => (
           <ArticleCard
             key={article.id}
             articleData={article as Article}
             userId={session?.user?.id as string}
             isEditorAble={false}
+            index={index}
             onSuccess={async () => {
               await refetch()
               return
