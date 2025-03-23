@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { NavButton } from '../ui/NavButton'
 
 type DialogDemoProps = {
@@ -30,12 +30,7 @@ export function DialogDemo({ name, children, onSuccess }: DialogDemoProps) {
       <DialogTrigger asChild>
         <NavButton>{name}</NavButton>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{name}</DialogTitle>
-        </DialogHeader>
-        {childrenWithProps}
-      </DialogContent>
+      <DialogContent className="w-[90%] sm:max-w-[425px] rounded-md">{childrenWithProps}</DialogContent>
     </Dialog>
   )
 }

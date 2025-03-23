@@ -60,10 +60,10 @@ const MobileMenu = ({
           ) : (
             <>
               <DialogDemo name="註冊">
-                <SignUpForm />
+                <SignUpForm setOpen={setOpen} />
               </DialogDemo>
               <DialogDemo name="登入">
-                <LogInForm />
+                <LogInForm setOpen={setOpen} />
               </DialogDemo>
             </>
           )}

@@ -1,7 +1,5 @@
 'use client'
 
-import * as React from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -13,10 +11,11 @@ import { signUpSchema, useRegister } from '../hooks/useRegister'
 
 type SignUpFormProps = {
   onDialogClose?: () => void
+  setOpen?: (open: boolean) => void
 }
 
-export default function SignUpForm({ onDialogClose }: SignUpFormProps) {
-  const { register, isPending, error } = useRegister()
+export default function SignUpForm({ onDialogClose, setOpen }: SignUpFormProps) {
+  const { register, isPending } = useRegister()
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -32,6 +31,9 @@ export default function SignUpForm({ onDialogClose }: SignUpFormProps) {
       await register(values)
       if (onDialogClose) {
         onDialogClose()
+      }
+      if (setOpen) {
+        setOpen(false)
       }
     } catch (error) {
       console.error('註冊失敗:', error)

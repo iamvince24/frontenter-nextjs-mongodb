@@ -13,9 +13,10 @@ import { loginSchema, useLogin } from '../hooks/useLogin'
 
 type LogInFormProps = {
   onDialogClose?: () => void
+  setOpen?: (open: boolean) => void
 }
 
-export default function LogInForm({ onDialogClose }: LogInFormProps) {
+export default function LogInForm({ onDialogClose, setOpen }: LogInFormProps) {
   const { login, isPending, error } = useLogin()
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -31,6 +32,9 @@ export default function LogInForm({ onDialogClose }: LogInFormProps) {
       await login(values)
       if (onDialogClose) {
         onDialogClose()
+      }
+      if (setOpen) {
+        setOpen(false)
       }
     } catch (error) {
       console.error('登入失敗:', error)
