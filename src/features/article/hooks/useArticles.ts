@@ -51,9 +51,13 @@ const fetchAllPublicArticles = async (
   return response.json()
 }
 
-export const useAllPublicArticles = (page: number = 1, limit: number = 8, search: string | null = null) => {
+export const useAllPublicArticles = (page: number = 1, limit: number = 9, search: string | null = null) => {
   return useQuery<ArticlesResponse, Error>({
     queryKey: ['articles', 'public', page, limit, search],
     queryFn: () => fetchAllPublicArticles(page, limit, search),
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    retry: 1,
   })
 }
