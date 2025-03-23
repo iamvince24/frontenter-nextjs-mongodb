@@ -109,12 +109,12 @@ export default function ArticleCard({
           <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">
             更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
           </div>
-          <div className="w-full flex flex-row items-center group">
+          {/* <div className="w-full flex flex-row items-center group">
             <ArticleLink article={articleData} aria-label={`閱讀更多關於 ${articleData.title} 的內容`}>
               <div className="mr-[5px]">read more</div>
             </ArticleLink>
             <IoIosArrowForward className="transition-transform duration-600 ease-linear group-hover:translate-x-[15px]" />
-          </div>
+          </div> */}
         </div>
 
         {isEditorAble && (
