@@ -56,7 +56,9 @@ export default function ArticlesLayout({
         style={{ animation: 'changeBackground 20s infinite' }}
       >
         <ChangeBackground />
-        <div className="text-2xl text-white tracking-widest font-bold">蒐羅前端學校</div>
+        <div className="text-2xl text-white tracking-widest font-bold py-1 px-3 bg-black rounded-md bg-opacity-50">
+          蒐羅前端學校
+        </div>
       </section>
       {/* <section className="w-full h-[70px] shadow-[0_0_25px_rgba(128,128,128,0.8)] flex justify-center mb-40">
         <div className="w-1/2 h-full flex justify-between items-center">

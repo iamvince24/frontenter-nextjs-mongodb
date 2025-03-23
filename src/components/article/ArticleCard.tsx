@@ -1,8 +1,6 @@
 'use client'
 
-import * as React from 'react'
 import Image from 'next/image'
-import { IoIosArrowForward } from 'react-icons/io'
 import { Button } from '../ui/button'
 import { Article } from '@/features/article/hooks/useFavoriteArticles'
 import { useFavorite } from '@/features/article/hooks/useFavorite'
@@ -18,7 +16,7 @@ const FavoriteBtn = dynamic(() => import('../ui/FavoriteBtn'), { ssr: false })
 const ArticleCardStyle = ({ children, isEditorAble }: { children: React.ReactNode; isEditorAble?: boolean }) => {
   return (
     <div
-      className={`w-[330px] ${isEditorAble ? 'h-[400px]' : 'h-[350px]'} text-[var(--text-size-h3)] flex flex-col items-center justify-between`}
+      className={`w-[280px] sm:w-[330px] ${isEditorAble ? 'h-[350px]' : 'h-[320px]'} text-[var(--text-size-h3)] flex flex-col items-center justify-between`}
     >
       {children}
     </div>
@@ -63,13 +61,7 @@ export default function ArticleCard({
     onSuccess,
   })
 
-  const { deleteArticle, isDeleting } = useDeleteArticle({
-    // onSuccess: async () => {
-    //   if (onSuccess) {
-    //     await onSuccess()
-    //   }
-    // },
-  })
+  const { deleteArticle, isDeleting } = useDeleteArticle()
 
   if (isLoading) {
     return (
@@ -87,13 +79,12 @@ export default function ArticleCard({
     <ArticleCardStyle isEditorAble={isEditorAble}>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
         <div className="w-full flex flex-col gap-4">
-          <div className="w-[350px] h-[200px] overflow-hidden">
+          <div className="w-full aspect-[16/9] relative overflow-hidden">
             {imageUrl && (
               <ArticleLink article={articleData}>
                 <Image
-                  className="w-full h-full transition-transform duration-1000 ease-in-out hover:scale-110"
-                  width={350}
-                  height={200}
+                  className="object-cover transition-transform duration-1000 ease-in-out hover:scale-110"
+                  fill
                   src={imageUrl}
                   alt={`${title} 的文章封面圖片`}
                   loading="eager"

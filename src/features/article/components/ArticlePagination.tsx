@@ -31,8 +31,8 @@ const ArticlePagination = ({ currentPage, totalPages, basePath, className = '' }
 
   return (
     <Pagination className={`mb-5 ${className}`}>
-      <PaginationContent>
-        <PaginationItem>
+      <PaginationContent className="relative">
+        <PaginationItem className="absolute right-12 md:right-16">
           <PaginationPrevious
             href={`${basePath}?page=${Math.max(1, currentPage - 1)}`}
             onClick={e => handlePageChange(currentPage - 1, e)}
@@ -59,7 +59,7 @@ const ArticlePagination = ({ currentPage, totalPages, basePath, className = '' }
           </PaginationItem>
         )}
 
-        <PaginationItem>
+        <PaginationItem className="absolute left-12 md:left-16">
           <PaginationNext
             href={`${basePath}?page=${Math.min(totalPages, currentPage + 1)}`}
             onClick={e => handlePageChange(currentPage + 1, e)}
