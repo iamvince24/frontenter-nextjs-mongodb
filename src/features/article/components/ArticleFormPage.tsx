@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Button } from '@/components/ui/button'
 
 const formSchema = z.object({
-  title: z.string().min(1, { message: '請輸入標題' }),
+  title: z.string().min(1, { message: '請輸入標題' }).max(30, { message: '標題字數限制為 30 字' }),
   isPublic: z.boolean().default(true),
   content: z.string(),
   imageUrl: z.string(),
@@ -53,7 +53,6 @@ export function ArticleForm({ onSubmit, defaultValues, initialData }: ArticleFor
   }
 
   const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
     const formData = {
       ...data,
       imageUrl: data.imageUrl || '',
@@ -73,9 +72,11 @@ export function ArticleForm({ onSubmit, defaultValues, initialData }: ArticleFor
               <FormControl>
                 <Input
                   {...field}
+                  maxLength={30}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </FormControl>
+              <div className="text-xs text-gray-500 mt-1 text-right">{field.value?.length || 0}/30</div>
               <FormMessage />
             </FormItem>
           )}

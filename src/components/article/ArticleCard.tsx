@@ -13,9 +13,11 @@ import dynamic from 'next/dynamic'
 
 const FavoriteBtn = dynamic(() => import('../ui/FavoriteBtn'), { ssr: false })
 
-const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
+const ArticleCardStyle = ({ children, isEditorAble }: { children: React.ReactNode; isEditorAble?: boolean }) => {
   return (
-    <div className="w-[330px] h-[410px] mx-8 my-0 text-[var(--text-size-h3)] flex flex-col items-center justify-between">
+    <div
+      className={`w-[330px] ${isEditorAble ? 'h-[400px]' : 'h-[350px]'} text-[var(--text-size-h3)] flex flex-col items-center justify-between`}
+    >
       {children}
     </div>
   )
@@ -72,7 +74,7 @@ export default function ArticleCard({
   }
 
   return (
-    <ArticleCardStyle>
+    <ArticleCardStyle isEditorAble={isEditorAble}>
       <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
         <div className="w-full flex flex-col gap-4">
           <div className="w-[350px] h-[200px] overflow-hidden">
@@ -102,26 +104,38 @@ export default function ArticleCard({
           </div>
         </div>
 
-        <div className="w-full flex flex-col items-start mb-[50px] text-left">
-          {author?.username && (
-            <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">作者：{author?.username}</div>
-          )}
-          <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">
-            更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
-          </div>
-          {/* <div className="w-full flex flex-row items-center group">
+        <div className="flex flex-col gap-4 self-start w-full">
+          <div className="w-full flex flex-col  self-start">
+            {author?.username && (
+              <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">
+                作者：{author?.username}
+              </div>
+            )}
+
+            <div className="inline tracking-[0.5px] text-left text-[16px] text-gray-500">
+              更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
+            </div>
+
+            {/* <div className="w-full flex flex-row items-center group">
             <ArticleLink article={articleData} aria-label={`閱讀更多關於 ${articleData.title} 的內容`}>
               <div className="mr-[5px]">read more</div>
             </ArticleLink>
             <IoIosArrowForward className="transition-transform duration-600 ease-linear group-hover:translate-x-[15px]" />
           </div> */}
-        </div>
+          </div>
 
-        {isEditorAble && (
-          <Button variant="outline" size="sm" asChild onClick={e => e.stopPropagation()}>
-            <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
-          </Button>
-        )}
+          {isEditorAble && (
+            <Button
+              variant="default"
+              size="sm"
+              asChild
+              className="w-fit self-center"
+              onClick={e => e.stopPropagation()}
+            >
+              <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
+            </Button>
+          )}
+        </div>
       </div>
     </ArticleCardStyle>
   )
