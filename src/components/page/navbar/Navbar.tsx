@@ -11,6 +11,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import SearchInputComponent from '@/components/search/SearchInputComponent'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
+import MobileMenu from './MobileMenu'
 
 const links: { title: string; href: string; description: string }[] = [
   {
@@ -36,10 +37,14 @@ function Navbar({ currentUsername: initialUsername }: { currentUsername?: string
   return (
     <header className="w-full h-28 bg-gray-100 flex flex-row justify-between items-center pl-3 pr-4">
       <Link href="/" prefetch={true}>
-        <Image width={403} height={195} src="/feLogo.png" alt="feLogo" className="w-36" />
+        <Image width={403} height={195} src="/feLogo.png" alt="feLogo" className="w-36 min-w-[100px]" />
       </Link>
 
-      <div className="flex gap-x-0 sm:gap-x-4 md:gap-x-8">
+      <div className="md:hidden">
+        <MobileMenu username={username} pathname={pathname} links={links} />
+      </div>
+
+      <div className="hidden md:flex gap-x-0 sm:gap-x-4 md:gap-x-8">
         <Suspense fallback={<LoadingSpinner text="載入文章中..." />}>
           <SearchInputComponent placeholder="輸入關鍵字..." />
         </Suspense>

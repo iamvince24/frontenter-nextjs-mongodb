@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { LoadingSpinner } from '../loading/LoadingSpinner'
 
 interface SearchInputProps {
   placeholder?: string
@@ -63,47 +64,49 @@ const SearchInputComponent: React.FC<SearchInputProps> = ({ placeholder = '搜�
     }
   }
   return (
-    <div className="flex items-center justify-end relative h-10 w-[300px]">
-      <div
-        className={`flex items-center transition-all duration-300 absolute right-0 ${
-          isSearchOpen ? 'w-full opacity-100' : 'w-0 opacity-0'
-        }`}
-      >
-        {isSearchOpen && (
-          <div className="relative w-full">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleSearch}
-              className="h-8 w-8 absolute left-1 top-1/2 transform -translate-y-1/2 text-gray-500 rounded-full "
-              aria-label="執行搜尋"
-              tabIndex={0}
-            >
-              <Search size={16} />
-            </Button>
-            <Input
-              type="text"
-              placeholder={placeholder}
-              value={searchValue}
-              onChange={handleSearchChange}
-              onKeyDown={handleKeyDown}
-              className="w-full pl-10 pr-10 h-10 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:shadow-none"
-              autoFocus
-            />
-          </div>
-        )}
-      </div>
+    <Suspense fallback={<LoadingSpinner text="載入文章中..." />}>
+      <div className={`flex items-center justify-center md:justify-end relative h-10 w-[300px]`}>
+        <div
+          className={`flex items-center transition-all duration-300 absolute right-0 ${
+            isSearchOpen ? 'w-full opacity-100' : 'w-0 opacity-0'
+          }`}
+        >
+          {isSearchOpen && (
+            <div className="relative w-full">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleSearch}
+                className="h-8 w-8 absolute left-1 top-1/2 transform -translate-y-1/2 text-gray-500 rounded-full "
+                aria-label="執行搜尋"
+                tabIndex={0}
+              >
+                <Search size={16} />
+              </Button>
+              <Input
+                type="text"
+                placeholder={placeholder}
+                value={searchValue}
+                onChange={handleSearchChange}
+                onKeyDown={handleKeyDown}
+                className="w-full pl-10 pr-10 h-10 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none focus-visible:shadow-none"
+                autoFocus
+              />
+            </div>
+          )}
+        </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleSearch}
-        className="h-8 w-8 p-2 z-10 mr-1 rounded-full hover:delay-100"
-        aria-label={isSearchOpen ? '關閉搜尋' : '開啟搜尋'}
-      >
-        {isSearchOpen ? <X size={20} /> : <Search size={20} />}
-      </Button>
-    </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleSearch}
+          className="h-8 w-8 p-2 z-10 mr-1 rounded-full hover:delay-100"
+          aria-label={isSearchOpen ? '關閉搜尋' : '開啟搜尋'}
+        >
+          {isSearchOpen ? <X size={20} /> : <Search size={20} />}
+        </Button>
+      </div>
+    </Suspense>
   )
 }
 

@@ -135,21 +135,12 @@ export default function ArticleCard({
           </div>
 
           {isEditorAble && (
-            <div className="flex flex-row gap-2 justify-center">
+            <div className="flex flex-row gap-4 justify-center">
               <Button variant="default" size="sm" asChild className="w-fit" onClick={e => e.stopPropagation()}>
                 <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
               </Button>
 
-              {/* <Button size="sm" variant="outline" onClick={e => e.stopPropagation()}>
-                刪除
-              </Button> */}
-              <DeleteArticleButton
-                articleId={articleId}
-                onDeleteConfirm={e => {
-                  // e.stopPropagation()
-                  deleteArticle(articleId)
-                }}
-              />
+              <DeleteArticleButton articleId={articleId} onDeleteConfirm={() => deleteArticle(articleId)} />
             </div>
           )}
         </div>
