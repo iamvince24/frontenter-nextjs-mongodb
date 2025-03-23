@@ -72,7 +72,7 @@ export const ImageUploader = ({
       >
         {({ open }) => (
           <Button type="button" onClick={() => open?.()} className="w-fit">
-            上傳
+            {imageUrl ? '上傳新圖片' : '上傳圖片'}
           </Button>
         )}
       </CldUploadWidget>
