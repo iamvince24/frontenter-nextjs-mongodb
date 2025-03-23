@@ -5,13 +5,13 @@ const nextConfig = {
       //   "avatars.githubusercontent.com",
       //   "platform-lookaside.fbsbx.com",
       //   "lh3.googleusercontent.com",
-      "res.cloudinary.com",
+      'res.cloudinary.com',
     ],
   },
-};
+}
 
 // export default nextConfig;
-module.exports = nextConfig;
+module.exports = nextConfig
 
 // module.exports = {
 //   experimental: {

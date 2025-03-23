@@ -22,16 +22,16 @@ const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
 }
 
 const ArticleLink = ({
-  articleId,
+  article,
   children,
   className,
 }: {
-  articleId: string
+  article: Article
   children: React.ReactNode
   className?: string
 }) => {
   return (
-    <Link href={`/article/${articleId}`} prefetch={true} className={className}>
+    <Link href={`/article/${article.id}`} prefetch={true} className={className} aria-label={article.title}>
       {children}
     </Link>
   )
@@ -77,7 +77,7 @@ export default function ArticleCard({
         <div className="w-full flex flex-col gap-4">
           <div className="w-[350px] h-[200px] overflow-hidden">
             {imageUrl && (
-              <ArticleLink articleId={articleId} className={articleClassName}>
+              <ArticleLink article={articleData}>
                 <Image
                   className="w-full h-full transition-transform duration-1000 ease-in-out hover:scale-110"
                   width={350}
@@ -93,7 +93,7 @@ export default function ArticleCard({
             )}
           </div>
           <div className="w-full flex justify-between items-start text-left">
-            <ArticleLink articleId={articleId} className="mr-3">
+            <ArticleLink article={articleData} className="mr-3">
               <h2 className="inline tracking-[0.5px] text-left text-[20px] font-bold">{title}</h2>
             </ArticleLink>
             <div className="mt-1">
@@ -110,7 +110,7 @@ export default function ArticleCard({
             更新日期：{dayjs(updatedAt).format('YYYY-MM-DD')}
           </div>
           <div className="w-full flex flex-row items-center group">
-            <ArticleLink articleId={articleId}>
+            <ArticleLink article={articleData}>
               <div className="mr-[5px]">read more</div>
             </ArticleLink>
             <IoIosArrowForward className="transition-transform duration-600 ease-linear group-hover:translate-x-[15px]" />
