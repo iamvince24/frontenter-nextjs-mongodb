@@ -1,17 +1,13 @@
 import { IoIosArrowDown } from 'react-icons/io'
 import { Button } from '@/components/ui/button'
-import { LuPencilRuler } from 'react-icons/lu'
 import { RxDividerHorizontal } from 'react-icons/rx'
-import { getCurrentUser } from '@/actions/getCurrentUser'
 import Link from 'next/link'
 
 export default async function HomePage() {
-  const currentUser = await getCurrentUser()
-
   return (
     <>
       <main className="w-full flex min-h-screen flex-col items-center justify-between">
-        <section className="w-full h-[300px] bg-[url('/keyVisual.jpg')] bg-cover bg-no-repeat bg-center flex flex-col justify-between items-center py-8 md:h-[600px]">
+        <section className="w-full h-[450px] md:h-[600px] bg-[url('/keyVisual.jpg')] bg-cover bg-no-repeat bg-center flex flex-col justify-between items-center py-8 ">
           <></>
           <div className="w-full h-full text-white tracking-[5px] flex flex-col justify-center items-center md:tracking-[10px]">
             <h1 className="text-3xl font-bold tracking-[1px] p-2 mr-1 -mb-1 transition-transform duration-500 ease-in-out cursor-pointer hover:-rotate-6 md:p-4 md:mr-2 md:-mb-2">
@@ -36,7 +32,7 @@ export default async function HomePage() {
           <Button variant="secondary">測試 GO</Button>
         </section> */}
 
-        <section className="w-full h-[650px] bg-[linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('/articleImg.jpg')] bg-no-repeat bg-cover bg-bottom bg-fixed text-white text-2xl flex flex-col justify-center items-center gap-[30px]">
+        <section className="w-full h-[450px] md:h-[650px] bg-[linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url('/articleImg.jpg')] bg-no-repeat bg-cover bg-bottom bg-fixed text-white text-2xl flex flex-col justify-center items-center gap-[30px]">
           <p>教室精選</p>
           <Link href="/article/67d68cca3732e1923c62b920">
             <Button variant="secondary" className="w-40">
@@ -78,17 +74,19 @@ export default async function HomePage() {
           </div>
         </section> */}
 
-        <section className="w-full h-[365px] bg-[linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)),url('/aboutSectionImg.jpg')] bg-cover bg-no-repeat bg-bottom flex flex-col justify-end items-center sm:h-[730px]">
-          <p className="text-lg sm:text-2xl">關於</p>
-          <RxDividerHorizontal className="w-12 h-12" />
-          <p className="w-1/2 text-center mb-12">
-            近年來，社會對於軟體工程師的需求急速增加，全台各地的補習也如雨後春筍般開業，
-            然而人的時間有限，要如何找到適合自己的學習環境？
-            <br />
-            <br />
-            「Front-Enter」特別針對前端工程的學習資源，進行蒐集、分類，
-            期待讓有志成為前端工程師的人，找到最適合自己的學習環境。
-          </p>
+        <section className="w-full h-[650px] md:h-[650px] bg-[linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.1)),url('/aboutSectionImg.jpg')] bg-cover bg-no-repeat bg-bottom flex flex-col justify-end items-center sm:h-[730px] ">
+          <div className="p-4 pt-6 w-3/4 lg:w-full flex flex-col items-center bg-white lg:bg-transparent bg-opacity-90 rounded-lg mb-4">
+            <p className="text-lg sm:text-2xl">關於</p>
+            <RxDividerHorizontal className="w-12 h-12" />
+            <p className="w-full lg:w-4/5 mb-12 leading-7 text-justify lg:text-center">
+              近年來，社會對於軟體工程師的需求急速增加，全台各地的補習也如雨後春筍般開業，
+              然而人的時間有限，要如何找到適合自己的學習環境？
+              <br />
+              <br />
+              「Front-Enter」特別針對前端工程的學習資源，進行蒐集、分類，
+              期待讓有志成為前端工程師的人，找到最適合自己的學習環境。
+            </p>
+          </div>
         </section>
       </main>
     </>
