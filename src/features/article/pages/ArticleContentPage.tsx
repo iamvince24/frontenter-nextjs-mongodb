@@ -18,7 +18,7 @@ export default function ArticleContentPage({ article }: ArticleContentPageProps)
 
   return (
     <div className="flex flex-col gap-4 items-center px-10 md:px-40 lg:px-60 mb-10">
-      <div className="flex flex-col gap-4 items-start mt-16 ">
+      <div className="flex flex-col gap-4 items-start mt-16">
         <h1 className="text-[28px] sm:text-[40px] font-bold mb-1 sm:mb-0">{title}</h1>
 
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-8">
@@ -32,7 +32,7 @@ export default function ArticleContentPage({ article }: ArticleContentPageProps)
           </div>
         )}
       </div>
-      <div className="w-full flex gap-4 text-justify justify-start mt-16">
+      <div className="w-full flex gap-4 text-justify justify-start mt-0 md:mt-16">
         <ArticleContent content={content} />
       </div>
     </div>
