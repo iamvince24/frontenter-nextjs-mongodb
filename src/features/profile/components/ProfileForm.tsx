@@ -3,14 +3,18 @@ import { CurrentUser } from '@/actions/getCurrentUser'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { UseFormReturn } from 'react-hook-form'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { profileFormSchema } from '../hooks/useUpdateProfile'
+import { useEffect } from 'react'
 
 interface ProfileFormProps {
-  currentUser: CurrentUser
+  profile: {
+    username: string
+    bio: string
+    email: string
+  }
   isLoading: boolean
   onSubmit: (values: ProfileFormValues) => void
   onCancel: () => void
@@ -19,7 +23,13 @@ interface ProfileFormProps {
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-const ProfileForm = ({ currentUser, isLoading, onSubmit, onCancel, form }: ProfileFormProps) => {
+const ProfileForm = ({ profile, isLoading, onSubmit, onCancel, form }: ProfileFormProps) => {
+  useEffect(() => {
+    form.reset({
+      username: profile.username || '',
+      bio: profile.bio || '',
+    })
+  }, [profile, form])
   return (
     <Form {...form}>
       <form
@@ -57,7 +67,7 @@ const ProfileForm = ({ currentUser, isLoading, onSubmit, onCancel, form }: Profi
               </Tooltip>
             </TooltipProvider>
           </label>
-          <p className="mt-1 text-gray-900">{currentUser.email}</p>
+          <p className="mt-1 text-gray-900">{profile.email}</p>
         </div>
 
         <FormField

@@ -77,8 +77,8 @@ export default function ArticleCard({
 
   return (
     <ArticleCardStyle isEditorAble={isEditorAble}>
-      <div className="flex flex-col justify-between items-center text-center flex-grow cursor-pointer hover:opacity-70">
-        <div className="w-full flex flex-col gap-4">
+      <div className="flex flex-col justify-between items-center text-center flex-grow">
+        <div className="w-full flex flex-col gap-4 cursor-pointer hover:opacity-70">
           <div className="w-full aspect-[16/9] relative overflow-hidden">
             {imageUrl && (
               <ArticleLink article={articleData}>

@@ -74,7 +74,7 @@ const ProfilePage = ({ currentUser }: ProfilePageProps) => {
         <CardContent>
           {isEditing ? (
             <ProfileForm
-              currentUser={currentUser as CurrentUser}
+              profile={profile}
               isLoading={isLoading || isPending}
               onSubmit={handleSubmit}
               onCancel={handleCancel}

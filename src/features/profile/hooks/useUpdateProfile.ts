@@ -32,6 +32,7 @@ export const useUpdateProfile = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] })
+      queryClient.invalidateQueries({ queryKey: ['userProfile'] })
     },
   })
 }

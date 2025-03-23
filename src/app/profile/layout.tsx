@@ -24,7 +24,7 @@ export default function ProfileTab({
 
   return (
     <div>
-      <div className="flex justify-between items-center px-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center px-6 mb-8">
         <div></div>
 
         <div className="flex justify-center my-5 gap-3 items-center">
@@ -36,11 +36,11 @@ export default function ProfileTab({
         </div>
 
         {isInCreatePage || isInEditPage ? (
-          <Link href="/profile/article/self" className="justify-self-end" prefetch={true}>
+          <Link href="/profile/article/self" prefetch={true}>
             <Button size="sm">取消</Button>
           </Link>
         ) : (
-          <Link href="/profile/article/create" className="justify-self-end" prefetch={true}>
+          <Link href="/profile/article/create" prefetch={true}>
             <Button size="sm">新增文章</Button>
           </Link>
         )}
