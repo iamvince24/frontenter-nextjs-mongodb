@@ -15,6 +15,7 @@ interface CreateArticleResponse {
     content: string
     imageUrl: string
     isPublic: boolean
+    deletedAt: Date | null
   }
   error?: string
 }
