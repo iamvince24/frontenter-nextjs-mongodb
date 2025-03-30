@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
         authorId: currentUser.id,
         imageUrl,
         isPublic,
+        deletedAt: null,
       },
     })
 
