@@ -8,6 +8,7 @@ import { getCurrentUser } from '@/actions/getCurrentUser'
 import Providers from './providers'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import { Suspense } from 'react'
+import { Toaster } from '@/components/ui/toaster'
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,7 @@ export default async function RootLayout({
           <Navbar currentUsername={currentUsername} />
           <Suspense fallback={<LoadingSpinner text="載入中..." />}>{children}</Suspense>
           <Footer />
+          <Toaster />
         </Providers>
       </body>
     </html>
