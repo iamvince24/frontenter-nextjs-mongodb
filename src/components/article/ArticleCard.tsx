@@ -63,7 +63,7 @@ export default function ArticleCard({
 
   const { deleteArticle, isDeleting } = useDeleteArticle()
 
-  if (isLoading) {
+  if (isLoading || isDeleting) {
     return (
       <ArticleCardStyle>
         <LoadingSpinner />
@@ -77,18 +77,18 @@ export default function ArticleCard({
 
   return (
     <ArticleCardStyle isEditorAble={isEditorAble}>
-      <div className="flex flex-col justify-between items-center text-center flex-grow">
+      <div className="flex flex-col justify-between items-center text-center w-full flex-grow">
         <div className="w-full flex flex-col gap-4 cursor-pointer hover:opacity-70">
-          <div className="w-full aspect-[16/9] relative overflow-hidden">
+          <div className="w-full aspect-[16/9] relative overflow-hidden rounded-md">
             {imageUrl && (
-              <ArticleLink article={articleData}>
+              <ArticleLink article={articleData} className="w-full h-full block">
                 <Image
                   className="object-cover transition-transform duration-1000 ease-in-out hover:scale-110"
                   fill
                   src={imageUrl}
                   alt={`${title} 的文章封面圖片`}
                   loading="eager"
-                  sizes="(max-width: 768px) 100vw, 350px"
+                  sizes="(max-width: 768px) 280px, 330px"
                   blurDataURL={generateBlurDataURL(imageUrl)}
                   priority={index !== undefined && index < 3}
                 />
