@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import { useToast } from '@/hooks/use-toast'
 
 interface FavoriteParams {
   userId: string
@@ -17,6 +18,8 @@ export function useFavorite({
   isCollected: boolean | undefined
   onSuccess?: () => Promise<void>
 }) {
+  const { toast } = useToast()
+
   const addFavoriteMutation = useMutation({
     mutationFn: async (params: FavoriteParams) => {
       const response = await fetch('/api/articles/favorite', {
@@ -34,6 +37,11 @@ export function useFavorite({
       return response.json()
     },
     onSuccess: async () => {
+      toast({
+        title: '已加入收藏',
+        description: '文章已成功加入您的收藏列表',
+        duration: 2000,
+      })
       await onSuccess?.()
     },
     onError: error => {
@@ -58,6 +66,11 @@ export function useFavorite({
       return response.json()
     },
     onSuccess: async () => {
+      toast({
+        title: '已移除收藏',
+        description: '文章已從您的收藏列表中移除',
+        duration: 2000,
+      })
       await onSuccess?.()
     },
     onError: error => {
