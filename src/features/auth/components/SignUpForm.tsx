@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { signUpSchema, useRegister } from '../hooks/useRegister'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 type SignUpFormProps = {
   onDialogClose?: () => void
@@ -45,6 +46,14 @@ export default function SignUpForm({ onDialogClose, setOpen }: SignUpFormProps) 
       <CardHeader className="text-center">
         <CardTitle>註冊</CardTitle>
       </CardHeader>
+
+      <div className="mx-6 mb-4">
+        <Alert className="bg-orange-50 border-none">
+          <AlertTitle className="text-orange-500 mb-2">提示!</AlertTitle>
+          <AlertDescription>此網站僅供展示，可使用登入的預設帳號登入體驗後台功能。</AlertDescription>
+        </Alert>
+      </div>
+
       <CardContent>
         <Form {...form}>
           <form className="space-y-4 flex flex-col items-center" onSubmit={form.handleSubmit(onSubmit)}>

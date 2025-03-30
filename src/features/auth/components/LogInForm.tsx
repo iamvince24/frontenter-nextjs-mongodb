@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDes
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { loginSchema, useLogin } from '../hooks/useLogin'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
 type LogInFormProps = {
   onDialogClose?: () => void
@@ -45,6 +45,14 @@ export default function LogInForm({ onDialogClose, setOpen }: LogInFormProps) {
       <CardHeader className="text-center">
         <CardTitle>登入</CardTitle>
       </CardHeader>
+
+      <div className="mx-6 mb-4">
+        <Alert className="bg-orange-50 border-none">
+          <AlertTitle className="text-orange-500 mb-2">提示!</AlertTitle>
+          <AlertDescription>此網站僅供展示，可使用下方預設帳號登入體驗後台功能。</AlertDescription>
+        </Alert>
+      </div>
+
       <CardContent>
         <Form {...form}>
           <form className="space-y-4 flex flex-col items-center" onSubmit={form.handleSubmit(onSubmit)}>
