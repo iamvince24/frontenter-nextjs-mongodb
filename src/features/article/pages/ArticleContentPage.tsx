@@ -32,7 +32,7 @@ export default function ArticleContentPage({ article }: ArticleContentPageProps)
           </div>
         )}
       </div>
-      <div className="w-full flex gap-4 text-justify justify-start mt-0 md:mt-16">
+      <div className="w-full md:w-[700px] lg:w-[900px] xl:w-[1080px] flex gap-4 text-justify justify-start mt-0 md:mt-8">
         <ArticleContent content={content} />
       </div>
     </div>
