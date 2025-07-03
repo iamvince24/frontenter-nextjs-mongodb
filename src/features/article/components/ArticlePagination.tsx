@@ -36,7 +36,7 @@ const ArticlePagination = ({ currentPage, totalPages, basePath, className = '' }
           <PaginationPrevious
             href={`${basePath}?page=${Math.max(1, currentPage - 1)}`}
             onClick={e => handlePageChange(currentPage - 1, e)}
-            className={`text-lg ${currentPage <= 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
+            className={`text-lg ${currentPage <= 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'} mr-5`}
           />
         </PaginationItem>
 
@@ -63,7 +63,7 @@ const ArticlePagination = ({ currentPage, totalPages, basePath, className = '' }
           <PaginationNext
             href={`${basePath}?page=${Math.min(totalPages, currentPage + 1)}`}
             onClick={e => handlePageChange(currentPage + 1, e)}
-            className={`text-lg ${currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}`}
+            className={`text-lg ${currentPage >= totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'} ml-5`}
           />
         </PaginationItem>
       </PaginationContent>
