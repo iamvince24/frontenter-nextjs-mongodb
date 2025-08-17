@@ -2,10 +2,14 @@ import ArticleCard from '@/components/article/ArticleCard'
 import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { Button } from '@/components/ui/button'
-import ArticlePagination from '@/features/article/components/ArticlePagination'
 import { getPublicArticles, prefetchNextPublicArticles } from '@/lib/articles'
 import { getCurrentUser } from '@/actions/getCurrentUser'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+
+const ArticlePagination = dynamic(() => import('@/features/article/components/ArticlePagination'), {
+  loading: () => <div className="h-12 w-full" />,
+})
 
 interface ArticlesListPageProps {
   searchParams: {

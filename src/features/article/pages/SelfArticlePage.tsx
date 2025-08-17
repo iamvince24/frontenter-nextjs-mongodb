@@ -2,8 +2,12 @@ import ArticleCard from '../../../components/article/ArticleCard'
 import { CurrentUser } from '@/actions/getCurrentUser'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
-import ArticlePagination from '@/features/article/components/ArticlePagination'
 import { getAuthorArticles, prefetchNextAuthorArticles } from '@/lib/articles'
+import dynamic from 'next/dynamic'
+
+const ArticlePagination = dynamic(() => import('@/features/article/components/ArticlePagination'), {
+  loading: () => <div className="h-12 w-full" />,
+})
 
 interface SelfArticlePageProps {
   currentUser: CurrentUser

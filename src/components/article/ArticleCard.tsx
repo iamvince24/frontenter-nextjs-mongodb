@@ -3,8 +3,15 @@ import { Button } from '../ui/button'
 import { Article } from '@/lib/articles'
 import Link from 'next/link'
 import dayjs from 'dayjs'
-import FavoriteBtn from '../ui/FavoriteBtn'
-import DeleteArticleButton from './DeleteArticleButton'
+import dynamic from 'next/dynamic'
+
+const FavoriteBtn = dynamic(() => import('../ui/FavoriteBtn'), {
+  loading: () => <div className="w-6 h-6" />,
+})
+
+const DeleteArticleButton = dynamic(() => import('./DeleteArticleButton'), {
+  loading: () => <div className="w-16 h-8" />,
+})
 
 const ArticleCardStyle = ({ children, isEditorAble }: { children: React.ReactNode; isEditorAble?: boolean }) => {
   return (
