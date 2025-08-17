@@ -33,13 +33,13 @@ export default async function ArticlesListPage({ searchParams }: ArticlesListPag
 
   try {
     // 在伺服器端獲取文章資料
-    const { articles, pagination } = await getPublicArticles(currentPage, ITEMS_PER_PAGE, search)
+    const { articles, pagination } = await getPublicArticles(currentPage, ITEMS_PER_PAGE, search, currentUser?.id)
     const totalPages = pagination.totalPages
 
     // 預取下一頁數據（如果有下一頁）
     if (currentPage < totalPages) {
       // 在背景預取下一頁數據，不阻塞當前渲染
-      prefetchNextPublicArticles(currentPage, ITEMS_PER_PAGE, search).catch(() => {
+      prefetchNextPublicArticles(currentPage, ITEMS_PER_PAGE, search, currentUser?.id).catch(() => {
         // 靜默忽略預取錯誤
       })
     }

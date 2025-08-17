@@ -13,7 +13,7 @@ const DeleteArticleButton = dynamic(() => import('./DeleteArticleButton'), {
   loading: () => <div className="w-16 h-8" />,
 })
 
-const ArticleCardStyle = ({ children, isEditorAble }: { children: React.ReactNode; isEditorAble?: boolean }) => {
+const ArticleCardStyle = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-[280px] sm:w-[330px] text-[var(--text-size-h3)] flex flex-col items-center justify-between h-full">
       {children}
@@ -67,7 +67,7 @@ export default function ArticleCard({
   }
 
   return (
-    <ArticleCardStyle isEditorAble={isEditorAble}>
+    <ArticleCardStyle>
       <div className="flex flex-col justify-between items-center text-center w-full flex-grow">
         <div className="w-full flex flex-col gap-4 cursor-pointer hover:opacity-70">
           <div className="w-full aspect-[16/9] relative overflow-hidden rounded-md">

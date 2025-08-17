@@ -40,11 +40,10 @@ const _getPublicArticles = async (
   page: number = 1,
   limit: number = 9,
   search: string | null = null,
+  currentUserId?: string,
 ): Promise<ArticlesResponse> => {
   try {
     const skip = (page - 1) * limit
-    const currentUser = await getCurrentUser()
-    const currentUserId = currentUser?.id
 
     // 建立搜尋條件
     const whereCondition: Prisma.ArticleWhereInput = {
@@ -154,6 +153,7 @@ const _getPublicArticles = async (
  * @param page 頁碼，預設為 1
  * @param limit 每頁顯示數量，預設為 9
  * @param search 搜尋關鍵字，預設為 null
+ * @param currentUserId 當前使用者 ID，用於檢查收藏狀態
  * @returns 文章列表和分頁資訊
  */
 export const getPublicArticles = cache(
@@ -170,11 +170,12 @@ export const prefetchNextPublicArticles = async (
   currentPage: number,
   limit: number = 9,
   search: string | null = null,
+  currentUserId?: string,
 ) => {
   const nextPage = currentPage + 1
   // 靜默預取下一頁數據，忽略錯誤
   try {
-    await getPublicArticles(nextPage, limit, search)
+    await getPublicArticles(nextPage, limit, search, currentUserId)
   } catch (error) {
     // 靜默忽略預取錯誤
   }
