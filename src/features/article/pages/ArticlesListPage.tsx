@@ -3,7 +3,7 @@ import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { Button } from '@/components/ui/button'
 import ArticlePagination from '@/features/article/components/ArticlePagination'
-import { getPublicArticles } from '@/lib/articles'
+import { getPublicArticles, prefetchNextPublicArticles } from '@/lib/articles'
 import { getCurrentUser } from '@/actions/getCurrentUser'
 import Link from 'next/link'
 
@@ -31,6 +31,14 @@ export default async function ArticlesListPage({ searchParams }: ArticlesListPag
     // 在伺服器端獲取文章資料
     const { articles, pagination } = await getPublicArticles(currentPage, ITEMS_PER_PAGE, search)
     const totalPages = pagination.totalPages
+
+    // 預取下一頁數據（如果有下一頁）
+    if (currentPage < totalPages) {
+      // 在背景預取下一頁數據，不阻塞當前渲染
+      prefetchNextPublicArticles(currentPage, ITEMS_PER_PAGE, search).catch(() => {
+        // 靜默忽略預取錯誤
+      })
+    }
 
     // 如果沒有找到文章，顯示空狀態
     if (articles.length === 0) {

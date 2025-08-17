@@ -12,6 +12,7 @@ import { usePathname } from 'next/navigation'
 import SearchInputComponent from '@/components/search/SearchInputComponent'
 import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
 import MobileMenu from './MobileMenu'
+import { prefetchPublicArticles, debounce } from '@/lib/prefetch'
 
 const links: { title: string; href: string; description: string }[] = [
   {
@@ -34,6 +35,11 @@ function Navbar({ currentUsername: initialUsername }: { currentUsername?: string
     }
   }, [session, status, initialUsername])
 
+  // 創建延遲預取函數
+  const debouncedPrefetchArticles = debounce(() => {
+    prefetchPublicArticles(1)
+  }, 500)
+
   return (
     <header className="w-full h-28 bg-gray-100 flex flex-row justify-between items-center pl-3 pr-4">
       <Link href="/" prefetch={true}>
@@ -50,7 +56,16 @@ function Navbar({ currentUsername: initialUsername }: { currentUsername?: string
         </Suspense>
         {links?.map(link => {
           return (
-            <Link href={link.href} key={link.title} prefetch={true}>
+            <Link
+              href={link.href}
+              key={link.title}
+              prefetch={true}
+              onMouseEnter={() => {
+                if (link.href === '/articles') {
+                  debouncedPrefetchArticles()
+                }
+              }}
+            >
               <NavButton active={pathname.startsWith(link.href)}>{link.title}</NavButton>
             </Link>
           )

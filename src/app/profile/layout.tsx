@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { NavButton } from '@/components/ui/NavButton'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { prefetchFavoriteArticles, prefetchSelfArticles, debounce } from '@/lib/prefetch'
 
 export default function ProfileTab({
   children,
@@ -22,6 +23,15 @@ export default function ProfileTab({
   const isInCreatePage = pathname === '/profile/article/create'
   const isInEditPage = pathname.startsWith('/profile/article/edit')
 
+  // 創建延遲預取函數
+  const debouncedPrefetchFavorite = debounce(() => {
+    prefetchFavoriteArticles(1)
+  }, 500)
+
+  const debouncedPrefetchSelf = debounce(() => {
+    prefetchSelfArticles(1)
+  }, 500)
+
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-center px-6 mb-8">
@@ -29,7 +39,18 @@ export default function ProfileTab({
 
         <div className="flex justify-center my-5 gap-3 items-center">
           {navItems.map(item => (
-            <Link href={item.path} key={item.path} prefetch={true}>
+            <Link
+              href={item.path}
+              key={item.path}
+              prefetch={true}
+              onMouseEnter={() => {
+                if (item.path === '/profile/article/collection') {
+                  debouncedPrefetchFavorite()
+                } else if (item.path === '/profile/article/self') {
+                  debouncedPrefetchSelf()
+                }
+              }}
+            >
               <NavButton active={pathname === item.path}>{item.label}</NavButton>
             </Link>
           ))}

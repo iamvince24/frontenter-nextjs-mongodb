@@ -8,6 +8,7 @@ import { DialogDemo } from '@/components/dialog/DialogDemo'
 import SignUpForm from '@/features/auth/components/SignUpForm'
 import LogInForm from '@/features/auth/components/LogInForm'
 import { Button } from '@/components/ui/button'
+import { prefetchPublicArticles, debounce } from '@/lib/prefetch'
 
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerTrigger } from '@/components/ui/drawer'
 
@@ -26,6 +27,11 @@ const MobileMenu = ({
     setOpen(open)
   }
 
+  // 創建延遲預取函數
+  const debouncedPrefetchArticles = debounce(() => {
+    prefetchPublicArticles(1)
+  }, 300)
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="top">
       <DrawerTrigger asChild>
@@ -39,7 +45,17 @@ const MobileMenu = ({
           <SearchInputComponent placeholder="輸入關鍵字..." />
 
           {links?.map(link => (
-            <Link href={link.href} key={link.title} prefetch={true} onClick={() => onOpenChange(false)}>
+            <Link
+              href={link.href}
+              key={link.title}
+              prefetch={true}
+              onClick={() => onOpenChange(false)}
+              onTouchStart={() => {
+                if (link.href === '/articles') {
+                  debouncedPrefetchArticles()
+                }
+              }}
+            >
               <NavButton active={pathname.startsWith(link.href)} className="w-full justify-center">
                 {link.title}
               </NavButton>

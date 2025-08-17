@@ -1,5 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client'
 import { getCurrentUser } from '@/actions/getCurrentUser'
+import { cache } from 'react'
+import { unstable_cache } from 'next/cache'
 
 const prisma = new PrismaClient()
 
@@ -32,17 +34,13 @@ export interface ArticlesResponse {
 }
 
 /**
- * 獲取所有公開文章的 Server 函數
- * @param page 頁碼，預設為 1
- * @param limit 每頁顯示數量，預設為 9
- * @param search 搜尋關鍵字，預設為 null
- * @returns 文章列表和分頁資訊
+ * 獲取所有公開文章的內部實現
  */
-export async function getPublicArticles(
+const _getPublicArticles = async (
   page: number = 1,
   limit: number = 9,
   search: string | null = null,
-): Promise<ArticlesResponse> {
+): Promise<ArticlesResponse> => {
   try {
     const skip = (page - 1) * limit
     const currentUser = await getCurrentUser()
@@ -152,17 +150,40 @@ export async function getPublicArticles(
 }
 
 /**
- * 獲取使用者收藏文章的 Server 函數（支援分頁）
- * @param userId 使用者 ID
+ * 獲取所有公開文章的 Server 函數（帶緩存）
  * @param page 頁碼，預設為 1
  * @param limit 每頁顯示數量，預設為 9
- * @returns 收藏的文章列表和分頁資訊
+ * @param search 搜尋關鍵字，預設為 null
+ * @returns 文章列表和分頁資訊
  */
-export async function getFavoriteArticles(
-  userId: string,
-  page: number = 1,
+export const getPublicArticles = cache(
+  unstable_cache(_getPublicArticles, ['public-articles'], {
+    revalidate: 300, // 5分鐘緩存
+    tags: ['articles', 'public-articles'],
+  }),
+)
+
+/**
+ * 預取下一頁公開文章數據
+ */
+export const prefetchNextPublicArticles = async (
+  currentPage: number,
   limit: number = 9,
-): Promise<ArticlesResponse> {
+  search: string | null = null,
+) => {
+  const nextPage = currentPage + 1
+  // 靜默預取下一頁數據，忽略錯誤
+  try {
+    await getPublicArticles(nextPage, limit, search)
+  } catch (error) {
+    // 靜默忽略預取錯誤
+  }
+}
+
+/**
+ * 獲取使用者收藏文章的內部實現
+ */
+const _getFavoriteArticles = async (userId: string, page: number = 1, limit: number = 9): Promise<ArticlesResponse> => {
   if (!userId) {
     return {
       articles: [],
@@ -233,19 +254,41 @@ export async function getFavoriteArticles(
 }
 
 /**
- * 獲取作者的文章列表 Server 函數（支援分頁）
- * @param authorId 作者 ID
- * @param currentUserId 當前使用者 ID（可選，用於檢查收藏狀態）
+ * 獲取使用者收藏文章的 Server 函數（帶緩存）
+ * @param userId 使用者 ID
  * @param page 頁碼，預設為 1
  * @param limit 每頁顯示數量，預設為 9
- * @returns 作者的文章列表和分頁資訊
+ * @returns 收藏的文章列表和分頁資訊
  */
-export async function getAuthorArticles(
+export const getFavoriteArticles = cache(
+  unstable_cache(_getFavoriteArticles, ['favorite-articles'], {
+    revalidate: 300, // 5分鐘緩存
+    tags: ['articles', 'favorite-articles'],
+  }),
+)
+
+/**
+ * 預取下一頁收藏文章數據
+ */
+export const prefetchNextFavoriteArticles = async (userId: string, currentPage: number, limit: number = 9) => {
+  const nextPage = currentPage + 1
+  // 靜默預取下一頁數據，忽略錯誤
+  try {
+    await getFavoriteArticles(userId, nextPage, limit)
+  } catch (error) {
+    // 靜默忽略預取錯誤
+  }
+}
+
+/**
+ * 獲取作者的文章列表內部實現
+ */
+const _getAuthorArticles = async (
   authorId: string,
   currentUserId?: string,
   page: number = 1,
   limit: number = 9,
-): Promise<ArticlesResponse> {
+): Promise<ArticlesResponse> => {
   if (!authorId) {
     return {
       articles: [],
@@ -350,5 +393,38 @@ export async function getAuthorArticles(
   } catch (error) {
     console.error('獲取作者文章時發生錯誤:', error)
     throw new Error('無法獲取作者文章列表')
+  }
+}
+
+/**
+ * 獲取作者的文章列表 Server 函數（支援分頁，帶緩存）
+ * @param authorId 作者 ID
+ * @param currentUserId 當前使用者 ID（可選，用於檢查收藏狀態）
+ * @param page 頁碼，預設為 1
+ * @param limit 每頁顯示數量，預設為 9
+ * @returns 作者的文章列表和分頁資訊
+ */
+export const getAuthorArticles = cache(
+  unstable_cache(_getAuthorArticles, ['author-articles'], {
+    revalidate: 300, // 5分鐘緩存
+    tags: ['articles', 'author-articles'],
+  }),
+)
+
+/**
+ * 預取下一頁作者文章數據
+ */
+export const prefetchNextAuthorArticles = async (
+  authorId: string,
+  currentUserId: string | undefined,
+  currentPage: number,
+  limit: number = 9,
+) => {
+  const nextPage = currentPage + 1
+  // 靜默預取下一頁數據，忽略錯誤
+  try {
+    await getAuthorArticles(authorId, currentUserId, nextPage, limit)
+  } catch (error) {
+    // 靜默忽略預取錯誤
   }
 }

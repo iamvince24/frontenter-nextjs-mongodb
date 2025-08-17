@@ -3,7 +3,7 @@ import { CurrentUser } from '@/actions/getCurrentUser'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
 import ArticlePagination from '@/features/article/components/ArticlePagination'
-import { getAuthorArticles } from '@/lib/articles'
+import { getAuthorArticles, prefetchNextAuthorArticles } from '@/lib/articles'
 
 interface SelfArticlePageProps {
   currentUser: CurrentUser
@@ -31,6 +31,14 @@ const SelfArticlePage = async ({ currentUser, searchParams }: SelfArticlePagePro
     // 在伺服器端獲取作者文章資料（支援分頁）
     const { articles, pagination } = await getAuthorArticles(authorId, authorId, currentPage, ITEMS_PER_PAGE)
     const totalPages = pagination.totalPages
+
+    // 預取下一頁數據（如果有下一頁）
+    if (currentPage < totalPages) {
+      // 在背景預取下一頁數據，不阻塞當前渲染
+      prefetchNextAuthorArticles(authorId, authorId, currentPage, ITEMS_PER_PAGE).catch(() => {
+        // 靜默忽略預取錯誤
+      })
+    }
 
     if (articles.length === 0 && currentPage === 1) {
       return <EmptyState message="您尚未發表任何文章" />
