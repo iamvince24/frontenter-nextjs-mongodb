@@ -1,58 +1,70 @@
-'use client'
-
 import ArticleCard from '../../../components/article/ArticleCard'
 import { CurrentUser } from '@/actions/getCurrentUser'
-import { useAuthorArticles } from '../../article/hooks/useAuthorArticles'
-import { LoadingSpinner } from '@/components/loading/LoadingSpinner'
-import { ErrorAlert } from '@/components/error/ErrorAlert'
 import { EmptyState } from '@/components/feedback/EmptyState'
-import { useEffect } from 'react'
 import ArticlesGridLayout from '@/components/article/ArticlesGridLayout'
+import ArticlePagination from '@/features/article/components/ArticlePagination'
+import { getAuthorArticles } from '@/lib/articles'
 
 interface SelfArticlePageProps {
   currentUser: CurrentUser
+  searchParams: {
+    page?: string
+  }
 }
 
-const SelfArticlePage: React.FC<SelfArticlePageProps> = ({ currentUser }) => {
+/**
+ * 個人文章頁面 - RSC 組件
+ * 使用 Server Components 進行資料獲取和渲染，支援分頁功能
+ */
+const SelfArticlePage = async ({ currentUser, searchParams }: SelfArticlePageProps) => {
   const authorId = currentUser?.id
 
-  const { data: articles, isLoading, error, isError, refetch } = useAuthorArticles(authorId)
-
-  useEffect(() => {
-    refetch()
-  }, [refetch])
-
-  if (isLoading) {
-    return <LoadingSpinner text="載入文章中..." />
+  if (!authorId) {
+    return <EmptyState message="請先登入以查看個人文章" />
   }
 
-  if (isError) {
-    return <ErrorAlert error={error} />
-  }
+  // 從 URL 參數獲取分頁資訊
+  const currentPage = parseInt(searchParams.page || '1')
+  const ITEMS_PER_PAGE = 9
 
-  if (articles && articles.length === 0) {
-    return <EmptyState message="您尚未發表任何文章" />
-  }
+  try {
+    // 在伺服器端獲取作者文章資料（支援分頁）
+    const { articles, pagination } = await getAuthorArticles(authorId, authorId, currentPage, ITEMS_PER_PAGE)
+    const totalPages = pagination.totalPages
 
-  return (
-    <ArticlesGridLayout>
-      {articles &&
-        articles.map(article => {
-          return (
+    if (articles.length === 0 && currentPage === 1) {
+      return <EmptyState message="您尚未發表任何文章" />
+    }
+
+    if (articles.length === 0 && currentPage > 1) {
+      return <EmptyState message="此頁面沒有文章" />
+    }
+
+    return (
+      <div className="flex flex-col gap-16">
+        {/* 文章網格佈局 */}
+        <ArticlesGridLayout>
+          {articles.map((article, index) => (
             <ArticleCard
               key={article.id}
               articleData={article}
               userId={currentUser.id}
               isEditorAble={true}
-              onSuccess={async () => {
-                await refetch()
-                return
-              }}
+              index={index}
             />
-          )
-        })}
-    </ArticlesGridLayout>
-  )
+          ))}
+        </ArticlesGridLayout>
+
+        {/* 分頁組件 */}
+        {totalPages > 1 && (
+          <ArticlePagination currentPage={currentPage} totalPages={totalPages} basePath="/profile/article/self" />
+        )}
+      </div>
+    )
+  } catch (error) {
+    console.error('載入個人文章時發生錯誤:', error)
+    return <EmptyState message="載入個人文章時發生錯誤，請稍後再試" />
+  }
 }
 
 export default SelfArticlePage

@@ -1,17 +1,10 @@
-'use client'
-
 import Image from 'next/image'
 import { Button } from '../ui/button'
-import { Article } from '@/features/article/hooks/useFavoriteArticles'
-import { useFavorite } from '@/features/article/hooks/useFavorite'
-import { LoadingSpinner } from '../loading/LoadingSpinner'
+import { Article } from '@/lib/articles'
 import Link from 'next/link'
 import dayjs from 'dayjs'
-import dynamic from 'next/dynamic'
+import FavoriteBtn from '../ui/FavoriteBtn'
 import DeleteArticleButton from './DeleteArticleButton'
-import { useDeleteArticle } from '@/features/article/hooks/useDeleteArticle'
-
-const FavoriteBtn = dynamic(() => import('../ui/FavoriteBtn'), { ssr: false })
 
 const ArticleCardStyle = ({ children, isEditorAble }: { children: React.ReactNode; isEditorAble?: boolean }) => {
   return (
@@ -39,38 +32,31 @@ const ArticleLink = ({
   )
 }
 
+/**
+ * 文章卡片組件
+ * @param articleData 文章資料
+ * @param userId 使用者 ID
+ * @param isEditorAble 是否可編輯
+ * @param index 文章索引
+ */
 export default function ArticleCard({
   articleData,
   userId,
   isEditorAble,
-  onSuccess,
   index,
 }: {
   articleData: Article
   userId?: string
   isEditorAble?: boolean
-  onSuccess?: () => Promise<void>
   index?: number
 }) {
-  const { id: articleId, updatedAt, imageUrl, className: articleClassName, title, isCollected, author } = articleData
+  const { id: articleId, updatedAt, imageUrl, title, isCollected, author } = articleData
 
-  const { toggleFavorite, isLoading } = useFavorite({
-    userId: userId || '',
-    articleId,
-    isCollected,
-    onSuccess,
-  })
-
-  const { deleteArticle, isDeleting } = useDeleteArticle()
-
-  if (isLoading || isDeleting) {
-    return (
-      <ArticleCardStyle>
-        <LoadingSpinner />
-      </ArticleCardStyle>
-    )
-  }
-
+  /**
+   * 生成模糊圖片的 Data URL
+   * @param src 原始圖片 URL
+   * @returns 模糊處理後的圖片 URL
+   */
   const generateBlurDataURL = (src: string) => {
     return src.replace('/upload/', '/upload/w_10,h_6,q_30,c_fill,e_blur:1000/')
   }
@@ -100,7 +86,7 @@ export default function ArticleCard({
               <h2 className="inline tracking-[0.5px] text-left text-[20px] font-bold">{title}</h2>
             </ArticleLink>
             <div className="mt-1">
-              {userId && <FavoriteBtn isCollected={isCollected ?? false} toggleFavorite={toggleFavorite} />}
+              {userId && <FavoriteBtn userId={userId} articleId={articleId} isCollected={isCollected ?? false} />}
             </div>
           </div>
         </div>
@@ -127,11 +113,11 @@ export default function ArticleCard({
 
           {isEditorAble && (
             <div className="flex flex-row gap-4 justify-center">
-              <Button variant="default" size="sm" asChild className="w-fit" onClick={e => e.stopPropagation()}>
+              <Button variant="default" size="sm" asChild className="w-fit">
                 <Link href={`/profile/article/edit/${articleId}`}>編輯</Link>
               </Button>
 
-              <DeleteArticleButton articleId={articleId} onDeleteConfirm={() => deleteArticle(articleId)} />
+              <DeleteArticleButton articleId={articleId} />
             </div>
           )}
         </div>

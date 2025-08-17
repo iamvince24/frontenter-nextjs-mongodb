@@ -9,10 +9,17 @@ export const metadata: Metadata = {
   keywords: '文章, 部落格, 學習心得, 前端學習',
 }
 
-export default function ArticlesPage() {
+interface ArticlesPageProps {
+  searchParams: {
+    search?: string
+    page?: string
+  }
+}
+
+export default function ArticlesPage({ searchParams }: ArticlesPageProps) {
   return (
     <Suspense fallback={<LoadingSpinner text="載入文章中..." />}>
-      <ArticlesListPage />
+      <ArticlesListPage searchParams={searchParams} />
     </Suspense>
   )
 }
