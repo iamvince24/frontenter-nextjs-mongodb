@@ -8,9 +8,7 @@ import DeleteArticleButton from './DeleteArticleButton'
 
 const ArticleCardStyle = ({ children, isEditorAble }: { children: React.ReactNode; isEditorAble?: boolean }) => {
   return (
-    <div
-      className={`w-[280px] sm:w-[330px] ${isEditorAble ? 'h-[350px]' : 'h-[320px]'} text-[var(--text-size-h3)] flex flex-col items-center justify-between`}
-    >
+    <div className="w-[280px] sm:w-[330px] text-[var(--text-size-h3)] flex flex-col items-center justify-between h-full">
       {children}
     </div>
   )
